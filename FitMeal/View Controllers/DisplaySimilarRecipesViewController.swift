@@ -59,6 +59,9 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
                 for eachResultDic in resultDicArray{
                     let title=eachResultDic["title"] as! String
                     let id=eachResultDic["id"] as! Int
+                    if(FavoriteRecipeViewController.dislikeID.contains(id)){
+                        continue
+                    }
                     let imagePartUrl=eachResultDic["image"] as! String
                     let imageURL="https://spoonacular.com/recipeImages/"+imagePartUrl
                     let readyInMinutes=eachResultDic["readyInMinutes"] as! Int
@@ -122,7 +125,16 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
         self.selectedImage=cell.similarRecipeImageView.image
               self.performSegueWithIdentifier("toIndividualRecipe", sender: self)
     }
-
+    @IBAction func unwindToDisplaySimilarRecipesViewController(segue: UIStoryboardSegue) {
+        for eachItem in similarRecipes{
+            if FavoriteRecipeViewController.dislikeID.contains(eachItem.id){
+                if let index=similarRecipes.indexOf(eachItem){
+                    similarRecipes.removeAtIndex(index)
+                }
+            }
+        }
+            self.tableView.reloadData()
+           }
 
 }
 extension DisplaySimilarRecipesViewController:UITableViewDataSource{

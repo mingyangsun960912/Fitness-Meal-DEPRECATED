@@ -1,12 +1,18 @@
 PODS:
   - Alamofire (3.4.1)
+  - FXBlurView (1.6.4)
+  - PopupDialog (0.3.0):
+    - FXBlurView
 
 DEPENDENCIES:
   - Alamofire
+  - PopupDialog (~> 0.3)
 
 SPEC CHECKSUMS:
   Alamofire: 01a82e2f6c0f860ade35534c8dd88be61bdef40c
+  FXBlurView: db786c2561cb49a09ae98407f52460096ab8a44f
+  PopupDialog: 6d911ffba0607b89a4d310a036bc1ced9e7e9d80
 
-PODFILE CHECKSUM: b3199ca13cb1a793f50524f92435ea021e76a785
+PODFILE CHECKSUM: 05b84ace0ac2a01edf8bc781329c0767ed710369
 
 COCOAPODS: 1.0.1

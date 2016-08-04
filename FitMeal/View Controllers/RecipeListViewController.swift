@@ -139,7 +139,7 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
                 }
                 for recipeResultDic in self.results!{
                     var eachSumRecipe:RecipeCellObject?
-                    var addItOrNot:Bool=true
+                 
                     let title=recipeResultDic["title"] as! String
                     let image=recipeResultDic["image"] as! String
                     let carbs=recipeResultDic["carbs"] as? String ?? ""
@@ -151,8 +151,7 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
                     
                     let missedIngredientsCount=recipeResultDic["missedIngredientCount"] as? Int ?? 0
       
-                    var missedIngredients:[String]?
-                    var stringRepOfMissedIngredients:String?
+   
                     
                     self.getRecipeInformation(Id, callback: { (serving:Int?, readyTime:Int?) in
                         servingPeople=serving!
@@ -205,7 +204,7 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
         var readyMinutes:Int?
         parameters["id"]=id
         parameters["includeNutrition"]=false
-        var iD=parameters["id"] as! Int
+        let iD=parameters["id"] as! Int
         Alamofire.request(.GET, "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/\(iD)/information", parameters: parameters, encoding: ParameterEncoding.URL,headers: head) .responseJSON{ response in
             switch response.result{
             case .Success(let value):
@@ -232,6 +231,7 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
                 firstVC.protein=self.proteinResult
                 firstVC.servings=self.servings
                 firstVC.readyTime=self.readyTime
+                firstVC.idOfRecipe=self.idOfRecipe
                 
                  let secondVC=destination.viewControllers![1] as! DisplayIngredientsViewController
                 secondVC.missedIngredientsCount=self.missedIngredientsCount

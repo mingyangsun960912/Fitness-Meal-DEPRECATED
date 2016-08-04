@@ -10,6 +10,9 @@ import UIKit
 import Alamofire
 class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelegate
 {
+    
+    @IBOutlet weak var trashButton: UIButton!
+    @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var infoSegmentedControl: UISegmentedControl!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var RecipeImageVIew: UIImageView!
@@ -34,11 +37,24 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
     var originalStringArray:[String]=[]
      var cellObjects:[StepCellObject]=[]
       var stepsResult:[String]=[]
+    var titleOfRecipe:String=""
+    var servings:Int?
+    var readyMinutes:Int?
+    var fat:String?
+    var calories:String?
+    var carbs:String?
+    var protein:String?
     let head: [String: String] = [
         "X-Mashape-Key": "1C9TO0ENkpmsho9kJK5xKzEcSdJAp1XiAgsjsn5TythzmyNqSb",
         ]
+    var returnToLast:Bool=false
     override func viewDidLoad() {
         super.viewDidLoad()
+        if(FavoriteRecipeViewController.likeID.contains(idOfRecipe!)){
+            likeButton.selected=true
+        }else{
+            likeButton.selected=false
+        }
         self.RecipeImageVIew.image=image
      self.ingredientTableView.dataSource=self
     self.ingredientTableView.delegate=self
@@ -103,12 +119,7 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
     */
     func getBasicInformationAndIngredients(){
         var parameters = [String:AnyObject]()
-        var servings:Int?
-        var readyMinutes:Int?
-        var fat:String?
-        var calories:String?
-        var carbs:String?
-        var protein:String?
+       
         parameters["id"]=idOfRecipe
         parameters["includeNutrition"]=true
         var iD=parameters["id"] as! Int
@@ -117,9 +128,8 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
             case .Success(let value):
                 
                 //MARK: get basic informaiton
-            
-                servings=value.objectForKey("servings") as? Int
-                readyMinutes=value.objectForKey("readyInMinutes") as? Int
+            self.servings=value.objectForKey("servings") as? Int
+                self.readyMinutes=value.objectForKey("readyInMinutes") as? Int
                 let wholeNutritionDic=value.objectForKey("nutrition") as? NSDictionary
                 let nutritionsArray=wholeNutritionDic!["nutrients"] as? [NSDictionary]
                 var ingredientList=value.objectForKey("extendedIngredients") as! [NSDictionary]
@@ -128,32 +138,32 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
                     if(theTitle == "Fat"){
                         let fatAmount=eachNutrtion["amount"] as! Double
                         let unit=eachNutrtion["unit"] as! String
-                        fat=String(fatAmount)+" \(unit)"
+                        self.fat=String(fatAmount)+" \(unit)"
                     }
                     if(theTitle == "Calories"){
                         let caloriesAmount=eachNutrtion["amount"] as! Double
                         let unit=eachNutrtion["unit"] as! String
-                        calories=String(caloriesAmount)+" \(unit)"
+                        self.calories=String(caloriesAmount)+" \(unit)"
                     }
                     if(theTitle == "Carbohydrates"){
                         let CarbohydratesAmount=eachNutrtion["amount"] as! Double
                         let unit=eachNutrtion["unit"] as! String
-                        carbs=String(CarbohydratesAmount)+" \(unit)"
+                        self.carbs=String(CarbohydratesAmount)+" \(unit)"
                     }
                     if(theTitle == "Protein"){
                         let proteinAmount=eachNutrtion["amount"] as! Double
                         let unit=eachNutrtion["unit"] as! String
-                        protein=String(proteinAmount)+" \(unit)"
+                        self.protein=String(proteinAmount)+" \(unit)"
                     }
                     
                 }
             
-                self.caloriesLabel.text=calories!
-                self.fatLabel.text=fat!
-                self.proteinLabel.text=protein!
-                self.carbsLabel.text=carbs!
-                self.servingLabel.text=String(servings!)+" servings"
-                self.readyInTimeLabel.text=String(readyMinutes!) + " minutes"
+                self.caloriesLabel.text=self.calories!
+                self.fatLabel.text=self.fat!
+                self.proteinLabel.text=self.protein!
+                self.carbsLabel.text=self.carbs!
+                self.servingLabel.text=String(self.servings!)+" servings"
+                self.readyInTimeLabel.text=String(self.readyMinutes!) + " minutes"
                 //MARK:Get Ingredients Informaiton
                 
                 for eachIngredient in ingredientList{
@@ -215,6 +225,56 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
             
         }
 
+    }
+    
+    @IBAction func likeButtonTapped(sender: UIButton) {
+        if(likeButton.selected){
+            likeButton.selected=false
+            if let index=FavoriteRecipeViewController.likeID.indexOf(idOfRecipe!){
+                FavoriteRecipeViewController.likeID.removeAtIndex(index)
+            }
+        }else{
+            likeButton.selected=true
+            FavoriteRecipeViewController.likeID.append(idOfRecipe!)
+            let newLikeItem=FavoriteRecipeObject(title:titleOfRecipe, id:idOfRecipe!,image:image!,ingredients:originalStringArray, steps:stepsResult, fat:fat!, protein:protein!, calories:calories!, carbs:carbs!, servings:servings!, readyInTime:readyMinutes!)
+            FavoriteRecipeViewController.favorites.append(newLikeItem)
+        }
+    }
+    
+    
+    @IBAction func trashButtonTapped(sender: UIButton) {
+        trashWarning()
+        
+    }
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        if identifier == "toDisplaySimilarRecipesViewController" {
+            return returnToLast
+        }
+        
+        return super.shouldPerformSegueWithIdentifier(identifier, sender: sender)
+    }
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let identifier = segue.identifier {
+            if identifier == "toDisplaySimilarRecipesViewController" {
+                print("Cancel button tapped")
+            }
+        }
+    }
+    func trashWarning(){
+        let warnAlertController=UIAlertController(title:"Destroy Forever", message: "You won't see this recipe ever again, are you sure you want to completely destroy it?",preferredStyle: UIAlertControllerStyle.Alert)
+        let yesAction=UIAlertAction(title:"Yes", style:UIAlertActionStyle.Default, handler: { (action: UIAlertAction!) in
+            self.trashButton.selected=true
+            FavoriteRecipeViewController.dislikeID.append(self.idOfRecipe!)
+            self.returnToLast=true
+            
+        })
+        let cancelAction=UIAlertAction(title:"Cancel", style:UIAlertActionStyle.Default,handler:nil)
+        warnAlertController.addAction(yesAction)
+        warnAlertController.addAction(cancelAction)
+      
+        
+        self.presentViewController(warnAlertController, animated: true, completion: nil)
     }
 }
 

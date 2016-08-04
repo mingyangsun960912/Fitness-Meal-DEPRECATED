@@ -79,6 +79,8 @@ class DisplayIngredientsViewController: UIViewController, UITableViewDelegate {
         }
     
 
+    @IBAction func addingItemsToShoppingCart(sender: UIButton) {
+           }
     /*
     // MARK: - Navigation
 
@@ -88,6 +90,13 @@ class DisplayIngredientsViewController: UIViewController, UITableViewDelegate {
         // Pass the selected object to the new view controller.
     }
     */
+    func addingNewItemToCart(callback:()-> Void){
+        for eachItem in self.nameArray{
+            let newAddingItem=ShoppingItemObject(name:eachItem,number:"",unit:"",priceEst:"",note:"")
+            ShoppingListViewController.shoppingItems.append(newAddingItem)
+        }
+
+    }
 
 }
 

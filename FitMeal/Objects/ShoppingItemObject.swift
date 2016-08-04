@@ -11,10 +11,10 @@ import UIKit
 class ShoppingItemObject: NSObject {
     var name:String
     var unit:String
-    var number:Double
+    var number:String
     var note:String
-    var priceEst:Double
-    init(name:String,number:Double,unit:String,priceEst:Double,note:String) {
+    var priceEst:String
+    init(name:String,number:String,unit:String,priceEst:String,note:String) {
         self.name=name
         self.unit=unit
         self.number=number
