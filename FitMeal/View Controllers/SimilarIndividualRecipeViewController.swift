@@ -55,6 +55,7 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
         }else{
             likeButton.selected=false
         }
+        titleLabel.text=titleOfRecipe
         self.RecipeImageVIew.image=image
      self.ingredientTableView.dataSource=self
     self.ingredientTableView.delegate=self
@@ -228,23 +229,31 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
     }
     
     @IBAction func likeButtonTapped(sender: UIButton) {
-        if(likeButton.selected){
-            likeButton.selected=false
-            if let index=FavoriteRecipeViewController.likeID.indexOf(idOfRecipe!){
-                FavoriteRecipeViewController.likeID.removeAtIndex(index)
-            }
+        if(likeButton.selected==true){
+            unlikeFunction()
         }else{
-            likeButton.selected=true
-            FavoriteRecipeViewController.likeID.append(idOfRecipe!)
-            let newLikeItem=FavoriteRecipeObject(title:titleOfRecipe, id:idOfRecipe!,image:image!,ingredients:originalStringArray, steps:stepsResult, fat:fat!, protein:protein!, calories:calories!, carbs:carbs!, servings:servings!, readyInTime:readyMinutes!)
-            FavoriteRecipeViewController.favorites.append(newLikeItem)
+            if(trashButton.selected==true){
+                likeFunction()
+                untrashFunction()
+            }
+            likeFunction()
         }
+
     }
     
     
     @IBAction func trashButtonTapped(sender: UIButton) {
-        trashWarning()
-        
+     
+        if(trashButton.selected==true){
+            untrashFunction()
+        }else{
+            if(likeButton.selected==true){
+                unlikeFunction()
+                trashFunction()
+            }
+            trashFunction()
+        }
+
     }
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
         if identifier == "toDisplaySimilarRecipesViewController" {
@@ -266,8 +275,7 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
         let yesAction=UIAlertAction(title:"Yes", style:UIAlertActionStyle.Default, handler: { (action: UIAlertAction!) in
             self.trashButton.selected=true
             FavoriteRecipeViewController.dislikeID.append(self.idOfRecipe!)
-            self.returnToLast=true
-            
+            self.performSegueWithIdentifier("toDisplaySimilarRecipesViewController", sender: self)
         })
         let cancelAction=UIAlertAction(title:"Cancel", style:UIAlertActionStyle.Default,handler:nil)
         warnAlertController.addAction(yesAction)
@@ -276,6 +284,29 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
         
         self.presentViewController(warnAlertController, animated: true, completion: nil)
     }
+    func likeFunction(){
+        likeButton.selected=true
+        FavoriteRecipeViewController.likeID.append(idOfRecipe!)
+        let newLikeItem=FavoriteRecipeObject(title:titleOfRecipe, id:idOfRecipe!,image:image!,ingredients:originalStringArray, steps:stepsResult, fat:fat!, protein:protein!, calories:calories!, carbs:carbs!, servings:servings!, readyInTime:readyMinutes!)
+        FavoriteRecipeViewController.favorites.append(newLikeItem)
+    }
+    func unlikeFunction(){
+        likeButton.selected=false
+        if let index=FavoriteRecipeViewController.likeID.indexOf(idOfRecipe!){
+            FavoriteRecipeViewController.likeID.removeAtIndex(index)
+        }
+    }
+    func trashFunction(){
+        trashWarning()
+    }
+    func untrashFunction(){
+        trashButton.selected=false
+        if let index=FavoriteRecipeViewController.dislikeID.indexOf(idOfRecipe!){
+            FavoriteRecipeViewController.dislikeID.removeAtIndex(index)
+        }
+    }
+
+    
 }
 
 extension SimilarIndividualRecipeViewController:UITableViewDataSource{

@@ -148,7 +148,9 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
                     let protein=recipeResultDic["protein"] as? String ?? ""
                     let fat=recipeResultDic["fat"] as? String ?? ""
                     let Id=recipeResultDic["id"] as? Int ?? 0
-                    
+                if(FavoriteRecipeViewController.dislikeID.contains(Id)){
+                        continue
+                    }
                     let missedIngredientsCount=recipeResultDic["missedIngredientCount"] as? Int ?? 0
       
    
@@ -246,7 +248,16 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
             }
         }
     }
-    
+    @IBAction func unwindToRecipeListViewController(segue: UIStoryboardSegue) {
+        for eachItem in recipeList{
+            if FavoriteRecipeViewController.dislikeID.contains(eachItem.id!){
+                if let index=recipeList.indexOf(eachItem){
+                    recipeList.removeAtIndex(index)
+                }
+            }
+        }
+        self.RecipeTableView.reloadData()
+    }
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)  as! RecipeListViewCellTableViewCell
         self.image = cell.recipePicImageView?.image

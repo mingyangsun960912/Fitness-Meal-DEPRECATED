@@ -19,15 +19,18 @@ class FavoriteRecipeViewController: UIViewController,UICollectionViewDelegate, U
     var filtered:[FavoriteRecipeObject] = []
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView.backgroundColor=UIColor.clearColor()
         collectionView.delegate=self
         collectionView.dataSource=self
         searchBar.delegate=self
         if(FavoriteRecipeViewController.favorites.count==0){
             noResultView.hidden=false
             collectionView.hidden=true
+            searchBar.hidden=false
         }else{
             noResultView.hidden=true
             collectionView.hidden=false
+            searchBar.hidden=false
         }
         // Do any additional setup after loading the view.
     }
@@ -69,12 +72,24 @@ class FavoriteRecipeViewController: UIViewController,UICollectionViewDelegate, U
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if(segue.identifier=="toFavoriteRecipe"){
             let destination=segue.destinationViewController as! FavoriteRecipeInfoViewController
+            let indexPaths=collectionView.indexPathsForSelectedItems()
+            let indexPath=indexPaths![0]
+            let item:FavoriteRecipeObject?
+            if(searchActive) {
+             item=filtered[indexPath.row]
+            }else{
+             item=FavoriteRecipeViewController.favorites[indexPath.row]
+        }
+            destination.favoriteRecipe=item
+           
+            
         }
         
     }
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        <#code#>
+    @IBAction func unwindToFavoriteCollectionViewController(segue: UIStoryboardSegue){
+        self.collectionView.reloadData()
     }
+  
     /*
     // MARK: - Navigation
 

@@ -10,8 +10,6 @@ import UIKit
 import Alamofire
 class DisplayIngredientsViewController: UIViewController, UITableViewDelegate {
 
-    @IBOutlet weak var missedIngredientsLabel: UILabel!
-    @IBOutlet weak var missedIngredientsTextView: UITextView!
     @IBOutlet weak var ingredientsTableView: UITableView!
    
     
@@ -26,7 +24,6 @@ class DisplayIngredientsViewController: UIViewController, UITableViewDelegate {
         self.ingredientsTableView.separatorColor=UIColor.clearColor()
         self.ingredientsTableView.delegate=self
         self.ingredientsTableView.dataSource=self
-        missedIngredientsLabel.text="Missing Ingredients: \(String(missedIngredientsCount!))"
         getIngredientApiResult()
         
         // Do any additional setup after loading the view.
@@ -66,8 +63,7 @@ class DisplayIngredientsViewController: UIViewController, UITableViewDelegate {
                         self.originalStringArray.append(description!)
                     }
                 }
-                self.missedIngredientsTextView.text=self.nameArray.joinWithSeparator(", ")
-                self.missedIngredientsLabel.text="All Ingredients:"
+                
                 self.ingredientsTableView.reloadData()
                
             case .Failure(let error):
@@ -80,6 +76,7 @@ class DisplayIngredientsViewController: UIViewController, UITableViewDelegate {
     
 
     @IBAction func addingItemsToShoppingCart(sender: UIButton) {
+        addingNewItemToCart()
            }
     /*
     // MARK: - Navigation
@@ -90,8 +87,9 @@ class DisplayIngredientsViewController: UIViewController, UITableViewDelegate {
         // Pass the selected object to the new view controller.
     }
     */
-    func addingNewItemToCart(callback:()-> Void){
+    func addingNewItemToCart(){
         for eachItem in self.nameArray{
+            
             let newAddingItem=ShoppingItemObject(name:eachItem,number:"",unit:"",priceEst:"",note:"")
             ShoppingListViewController.shoppingItems.append(newAddingItem)
         }

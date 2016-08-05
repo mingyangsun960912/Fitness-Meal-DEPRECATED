@@ -15,7 +15,7 @@ class DisplayRecipeViewController: UIViewController {
         ]
  
     @IBOutlet weak var recipeImageView: UIImageView!
-    @IBOutlet weak var recipeTitle: UITextView!
+    @IBOutlet weak var recipeTitle: UILabel!
     @IBOutlet weak var cookMinutesLabel: UILabel!
     @IBOutlet weak var servingLabel: UILabel!
     @IBOutlet weak var caloriesLabel: UILabel!
@@ -36,16 +36,26 @@ class DisplayRecipeViewController: UIViewController {
     var numberStringArray:[String]=[]
     var stepsStringArray:[String]=[]
     var stepsResult:[String]=[]
+    var returnToLast:Bool=false
     override func viewDidLoad() {
         super.viewDidLoad()
+               showRecipe()
+        resizeTextView()
+        // Do any additional setup after loading the view.
+    }
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
         if(FavoriteRecipeViewController.likeID.contains(idOfRecipe)){
             likeButton.selected=true
         }else{
             likeButton.selected=false
         }
-        showRecipe()
-        resizeTextView()
-        // Do any additional setup after loading the view.
+        if(FavoriteRecipeViewController.dislikeID.contains(idOfRecipe)){
+            trashButton.selected=true
+        }else{
+            trashButton.selected=false
+        }
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -63,14 +73,34 @@ class DisplayRecipeViewController: UIViewController {
     }
     @IBOutlet weak var likeButton: UIButton!
     @IBAction func likeButtonTapped(sender: UIButton) {
+        if(likeButton.selected==true){
+            unlikeFunction()
+        }else{
+            if(trashButton.selected==true){
+                untrashFunction()
+                likeFunction()
+                
+            }
+            likeFunction()
+        }
+
     }
     @IBAction func trashButtonTapped(sender: UIButton) {
+        if(trashButton.selected==true){
+            untrashFunction()
+        }else{
+            if(likeButton.selected==true){
+                 unlikeFunction()
+                trashFunction()
+               
+            }
+            trashFunction()
+        }
     }
     @IBOutlet weak var trashButton: UIButton!
     
     func showRecipe(){
-       recipeImageView.image=image
-//        recipeTitle.text=recipeInfo!.title
+        recipeImageView.image=image
         recipeTitle.text=titleForRecipe
         caloriesLabel.text=calories
         carbsLabel.text=carbs
@@ -81,9 +111,7 @@ class DisplayRecipeViewController: UIViewController {
         
           }
 
-    func prepareForLikeFunction(){
-        
-    }
+
     
     func getBasicInformationAndIngredients(){
         var parameters = [String:AnyObject]()
@@ -97,7 +125,6 @@ class DisplayRecipeViewController: UIViewController {
                 
                 //MARK: get basic informaiton
                 self.servings=value.objectForKey("servings") as? Int
-                self.readyMinutes=value.objectForKey("readyInMinutes") as? Int
                 let ingredientList=value.objectForKey("extendedIngredients") as! [NSDictionary]
                 //MARK:Get Ingredients Informaiton
                 
@@ -109,7 +136,9 @@ class DisplayRecipeViewController: UIViewController {
                     }
                 }
                 self.getSteps({()->Void in
-               
+                    let newLikeItem=FavoriteRecipeObject(title:self.titleForRecipe,id:self.idOfRecipe,image:self.image,ingredients:self.originalStringArray, steps:self.stepsResult,fat:self.fat,protein:self.protein,calories:self.calories,carbs:self.carbs,servings:self.servings,readyInTime:self.readyTime)
+                    FavoriteRecipeViewController.favorites.append(newLikeItem)
+                    self.likeButton.selected=true
                 })
                 
             case .Failure(let error):
@@ -118,7 +147,7 @@ class DisplayRecipeViewController: UIViewController {
         }
         
     }
-    
+
     func getSteps(completion:()->Void){
         let parameters=["id":idOfRecipe!, "stepBreakdown":true]
         Alamofire.request(.GET, "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/\(idOfRecipe!)/analyzedInstructions?stepBreakdown=true", parameters: parameters as? [String : AnyObject], encoding:ParameterEncoding.URL , headers: head) .responseJSON{ response in
@@ -149,6 +178,43 @@ class DisplayRecipeViewController: UIViewController {
             
         }
         
+    }
+    func trashWarning(){
+        let warnAlertController=UIAlertController(title:"Destroy Forever", message: "You won't see this recipe ever again, are you sure you want to completely destroy it?",preferredStyle: UIAlertControllerStyle.Alert)
+        let yesAction=UIAlertAction(title:"Yes", style:UIAlertActionStyle.Default, handler: { (action: UIAlertAction!) in
+            self.trashButton.selected=true
+            FavoriteRecipeViewController.dislikeID.append(self.idOfRecipe!)
+               self.performSegueWithIdentifier("toRecipeListViewController", sender: self)
+        })
+        let cancelAction=UIAlertAction(title:"Cancel", style:UIAlertActionStyle.Default,handler:nil)
+        warnAlertController.addAction(yesAction)
+        warnAlertController.addAction(cancelAction)
+        
+        
+        self.presentViewController(warnAlertController, animated: true, completion: nil)
+    }
+    //MARK:Handle all buttons
+    
+    func likeFunction(){
+        likeButton.selected=true
+        FavoriteRecipeViewController.likeID.append(idOfRecipe)
+        getBasicInformationAndIngredients()
+    }
+    func unlikeFunction(){
+        likeButton.selected=false
+        if let index=FavoriteRecipeViewController.likeID.indexOf(idOfRecipe){
+        FavoriteRecipeViewController.likeID.removeAtIndex(index)
+        }
+    }
+    func trashFunction(){
+ 
+        trashWarning()
+    }
+    func untrashFunction(){
+        trashButton.selected=false
+        if let index=FavoriteRecipeViewController.dislikeID.indexOf(idOfRecipe){
+        FavoriteRecipeViewController.dislikeID.removeAtIndex(index)
+        }
     }
     /*
     // MARK: - Navigation

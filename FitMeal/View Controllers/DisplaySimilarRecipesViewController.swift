@@ -20,6 +20,7 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
     var idOfIndividualRecipe:Int?
     var selectedImage:UIImage?
     var similarRecipes: [SimilarRecipeObject]=[]
+    var titleOfRecipe:String?
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -93,6 +94,7 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
           
             destination.idOfRecipe=self.chosenRecipeId!
             destination.image=self.selectedImage!
+            destination.titleOfRecipe=self.titleOfRecipe!
             
         }
     }
@@ -123,6 +125,7 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
        
         print(chosenRecipeId)
         self.selectedImage=cell.similarRecipeImageView.image
+        self.titleOfRecipe=cell.recipeNameLabel.text
               self.performSegueWithIdentifier("toIndividualRecipe", sender: self)
     }
     @IBAction func unwindToDisplaySimilarRecipesViewController(segue: UIStoryboardSegue) {

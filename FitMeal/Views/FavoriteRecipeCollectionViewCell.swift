@@ -10,5 +10,16 @@ import UIKit
 
 class FavoriteRecipeCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var recipeImage: UIImageView!
+    var title:String=""
+    var image:UIImage?
+    var id:Int=0
+    var ingredients:[String]=[]
+    var steps:[String]=[]
+    var fat:String=""
+    var protein:String=""
+    var calories:String=""
+    var carbs:String=""
+    var servings:Int=0
+    var readyInTime:Int=0
     
 }
