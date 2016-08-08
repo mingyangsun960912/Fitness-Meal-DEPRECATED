@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class FavoriteRecipeInfoViewController: UIViewController,UITableViewDelegate {
     var favoriteRecipe:FavoriteRecipeObject?
@@ -135,7 +136,10 @@ class FavoriteRecipeInfoViewController: UIViewController,UITableViewDelegate {
         let warnAlertController=UIAlertController(title:"Destroy Forever", message: "You won't see this recipe ever again, are you sure you want to completely destroy it?",preferredStyle: UIAlertControllerStyle.Alert)
         let yesAction=UIAlertAction(title:"Yes", style:UIAlertActionStyle.Default, handler: { (action: UIAlertAction!) in
             self.trashButton.selected=true
-            FavoriteRecipeViewController.dislikeID.append((self.favoriteRecipe?.id)!)
+            let dislikeObject=DislikeIDObject()
+            dislikeObject.dislikeID=self.favoriteRecipe!.id
+            RealmHelperClass.addDislikeID(dislikeObject)
+            InformationInputViewController.dislikeIDs=RealmHelperClass.retrieveDislikeIDObject()
             self.performSegueWithIdentifier("toFavoriteCollectionViewController", sender: self)
         })
         let cancelAction=UIAlertAction(title:"Cancel", style:UIAlertActionStyle.Default,handler:nil)
@@ -147,25 +151,37 @@ class FavoriteRecipeInfoViewController: UIViewController,UITableViewDelegate {
     }
     func likeFunction(){
         likeButton.selected=true
-        FavoriteRecipeViewController.likeID.append((favoriteRecipe?.id)!)
+        let likeObject=LikeIDObject()
+        likeObject.likeID=favoriteRecipe!.id
+        RealmHelperClass.addLikeID(likeObject)
+        InformationInputViewController.likeIDs=RealmHelperClass.retrieveLikeIDObject()
     }
     func unlikeFunction(){
         likeButton.selected=false
-        if let index=FavoriteRecipeViewController.likeID.indexOf((favoriteRecipe?.id)!){
-            FavoriteRecipeViewController.likeID.removeAtIndex(index)
-        }
+        let realm = try! Realm()
+        let unlikeIDObject = realm.objects(LikeIDObject).filter("likeID = \(favoriteRecipe!.id)")
+        RealmHelperClass.deleteLikeID(unlikeIDObject)
+        InformationInputViewController.likeIDs=RealmHelperClass.retrieveLikeIDObject()
+//        if let index=FavoriteRecipeViewController.likeID.indexOf((favoriteRecipe?.id)!){
+//            FavoriteRecipeViewController.likeID.removeAtIndex(index)
+//        }
     }
     func trashFunction(){
         trashWarning()
     }
     func untrashFunction(){
         trashButton.selected=false
-        if let index=FavoriteRecipeViewController.dislikeID.indexOf((favoriteRecipe?.id)!){
-            FavoriteRecipeViewController.dislikeID.removeAtIndex(index)
-        }
-    }
+        let realm=try! Realm()
+        let untrashIDObject = realm.objects(DislikeIDObject).filter("dislikeID = \(favoriteRecipe!.id)")
+        RealmHelperClass.deleteDislikeID(untrashIDObject)
+        InformationInputViewController.dislikeIDs=RealmHelperClass.retrieveDislikeIDObject()
+//        if let index=FavoriteRecipeViewController.dislikeID.indexOf((favoriteRecipe?.id)!){
+//            FavoriteRecipeViewController.dislikeID.removeAtIndex(index)
+//        }
+//    }
     
     
+}
 }
 
 extension FavoriteRecipeInfoViewController:UITableViewDataSource{

@@ -52,11 +52,11 @@ class DisplayIngredientsViewController: UIViewController, UITableViewDelegate {
             switch response.result{
             case .Success(let value):
       
-                var ingredientList=value.objectForKey("extendedIngredients") as! [NSDictionary]
+                let ingredientList=value.objectForKey("extendedIngredients") as! [NSDictionary]
                 for eachIngredient in ingredientList{
-                    var name=eachIngredient["name"] as? String
-                    var imageURL=eachIngredient["image"] as? String
-                    var description=eachIngredient["originalString"] as? String
+                    let name=eachIngredient["name"] as? String
+                    let imageURL=eachIngredient["image"] as? String
+                    let description=eachIngredient["originalString"] as? String
                     if let imageURL=imageURL{
                     self.nameArray.append(name!)
                     self.imageArray.append(imageURL)
@@ -129,7 +129,7 @@ extension DisplayIngredientsViewController:UITableViewDataSource{
       
              cell.ingredientImageViewTwo.image=image
                 cell.descriptionTextViewTwo.text=ingredientDescriptionTwo
-                print(cell.ingredientImageViewOne.image)
+               
             })
         }
         }

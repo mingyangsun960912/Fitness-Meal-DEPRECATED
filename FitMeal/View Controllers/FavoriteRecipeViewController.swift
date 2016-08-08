@@ -7,23 +7,23 @@
 //
 
 import UIKit
+import RealmSwift
 
 class FavoriteRecipeViewController: UIViewController,UICollectionViewDelegate, UISearchBarDelegate {
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var noResultView: UIView!
-    static var favorites:[FavoriteRecipeObject]=[]
-    static var likeID:[Int]=[]
-    static var dislikeID:[Int]=[]
+    static var favorites:Results<FavoriteRecipeObject>!
     var searchActive : Bool = false
     var filtered:[FavoriteRecipeObject] = []
     override func viewDidLoad() {
         super.viewDidLoad()
+        FavoriteRecipeViewController.favorites=RealmHelperClass.retrieveFavoriteRecipes()
         collectionView.backgroundColor=UIColor.clearColor()
         collectionView.delegate=self
         collectionView.dataSource=self
         searchBar.delegate=self
-        if(FavoriteRecipeViewController.favorites.count==0){
+                if(FavoriteRecipeViewController.favorites.count==0){
             noResultView.hidden=false
             collectionView.hidden=true
             searchBar.hidden=false

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class InformationInputViewController: UIViewController {
     var mode:String!
@@ -48,10 +49,13 @@ class InformationInputViewController: UIViewController {
     
     @IBOutlet weak var activeSelector: UISegmentedControl!
     
+    static var likeIDs: Results<LikeIDObject>!
+    static var dislikeIDs:Results<DislikeIDObject>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        InformationInputViewController.likeIDs=RealmHelperClass.retrieveLikeIDObject()
+        InformationInputViewController.dislikeIDs=RealmHelperClass.retrieveDislikeIDObject()
         // Do any additional setup after loading the view.
     }
 
@@ -226,25 +230,25 @@ class InformationInputViewController: UIViewController {
     func errorCheck() -> Bool {
         if(genderTextField.text == "") {
             nilError()
-            print("high")
+          
             return false
         }
         
         if(weightTextField.text == "" ){
             nilError()
-            print("fuck")
+         
             return false
         }
         
         if(ageTextField.text == ""){
             nilError()
-            print("this")
+   
             return false
         }
         
         if(heightTextField.text == ""){
             nilError()
-            print("shit")
+
             return false
         }
         

@@ -8,6 +8,8 @@
 
 import UIKit
 import Alamofire
+import AlamofireImage
+
 class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     
@@ -52,6 +54,7 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
     func getSimilarRecipes(id:Int){
         var parameters = [String:AnyObject]()
         parameters["id"]=id
+        print(id)
         let iD=parameters["id"] as! Int
         Alamofire.request(.GET, "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/\(iD)/similar", parameters: parameters, encoding: ParameterEncoding.URL,headers: head) .responseJSON{ response in
             switch response.result{
@@ -60,6 +63,9 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
                 for eachResultDic in resultDicArray{
                     let title=eachResultDic["title"] as! String
                     let id=eachResultDic["id"] as! Int
+                    if(id==509856){
+                        continue
+                    }
                     if(FavoriteRecipeViewController.dislikeID.contains(id)){
                         continue
                     }
@@ -69,7 +75,7 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
                     let similarRecipeObject=SimilarRecipeObject(title:title, id:id, imageURL:imageURL, readyInMinutes: readyInMinutes)
 //                    self.similarRecipes.append(similarRecipeObject)
                     self.getStepsInformation(id, completionHandler:{ (deleteRecipe:Bool) ->Void in
-                        print(deleteRecipe)
+                      
                         if (deleteRecipe==false){
                             
                             self.similarRecipes.append(similarRecipeObject)
@@ -123,7 +129,6 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
         let cell = tableView.cellForRowAtIndexPath(indexPath)  as! SimilarRecipeTableViewCell
         self.chosenRecipeId = cell.idOfRecipe
        
-        print(chosenRecipeId)
         self.selectedImage=cell.similarRecipeImageView.image
         self.titleOfRecipe=cell.recipeNameLabel.text
               self.performSegueWithIdentifier("toIndividualRecipe", sender: self)
@@ -156,10 +161,9 @@ extension DisplaySimilarRecipesViewController:UITableViewDataSource{
         let cellObject = similarRecipes[indexPath.row]
         cell.idOfRecipe=cellObject.id
         print(cell.idOfRecipe)
+         print(cellObject.imageURL)
+ 
         imageDownloadHelper.sharedLoader.imageForUrl(cellObject.imageURL, completionHandler:{(image: UIImage?, url: String) in
-        
-            print(cellObject.imageURL)
-            
             cell.similarRecipeImageView.image=image
             
             cell.recipeNameLabel.text=cellObject.title

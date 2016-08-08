@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import RealmSwift
 
 class DisplayRecipeViewController: UIViewController {
     let head: [String: String] = [
@@ -37,14 +38,18 @@ class DisplayRecipeViewController: UIViewController {
     var stepsStringArray:[String]=[]
     var stepsResult:[String]=[]
     var returnToLast:Bool=false
+    var newLikeItem:FavoriteRecipeObject?
     override func viewDidLoad() {
         super.viewDidLoad()
                showRecipe()
-        resizeTextView()
+        self.likeButton.hidden=true
+        self.trashButton.hidden=true
+        getBasicInformationAndIngredients()
         // Do any additional setup after loading the view.
     }
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
+
         if(FavoriteRecipeViewController.likeID.contains(idOfRecipe)){
             likeButton.selected=true
         }else{
@@ -62,15 +67,7 @@ class DisplayRecipeViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    func resizeTextView(){
-        let fixedWidth = recipeTitle.frame.size.width
-        recipeTitle.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.max))
-        let newSize = recipeTitle.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.max))
-        var newFrame = recipeTitle.frame
-        newFrame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
-        recipeTitle.frame = newFrame;
 
-    }
     @IBOutlet weak var likeButton: UIButton!
     @IBAction func likeButtonTapped(sender: UIButton) {
         if(likeButton.selected==true){
@@ -136,9 +133,11 @@ class DisplayRecipeViewController: UIViewController {
                     }
                 }
                 self.getSteps({()->Void in
+                    
                     let newLikeItem=FavoriteRecipeObject(title:self.titleForRecipe,id:self.idOfRecipe,image:self.image,ingredients:self.originalStringArray, steps:self.stepsResult,fat:self.fat,protein:self.protein,calories:self.calories,carbs:self.carbs,servings:self.servings,readyInTime:self.readyTime)
-                    FavoriteRecipeViewController.favorites.append(newLikeItem)
-                    self.likeButton.selected=true
+                    self.newLikeItem=newLikeItem
+                    self.likeButton.hidden=false
+                    self.trashButton.hidden=false
                 })
                 
             case .Failure(let error):
@@ -153,7 +152,6 @@ class DisplayRecipeViewController: UIViewController {
         Alamofire.request(.GET, "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/\(idOfRecipe!)/analyzedInstructions?stepBreakdown=true", parameters: parameters as? [String : AnyObject], encoding:ParameterEncoding.URL , headers: head) .responseJSON{ response in
             switch response.result{
             case .Success(let value1):
-                print(response)
                 let value = (value1 as! NSArray)[value1.count-1]
                 
                 let stepsResultArray=value.objectForKey("steps") as! [NSDictionary]
@@ -183,7 +181,11 @@ class DisplayRecipeViewController: UIViewController {
         let warnAlertController=UIAlertController(title:"Destroy Forever", message: "You won't see this recipe ever again, are you sure you want to completely destroy it?",preferredStyle: UIAlertControllerStyle.Alert)
         let yesAction=UIAlertAction(title:"Yes", style:UIAlertActionStyle.Default, handler: { (action: UIAlertAction!) in
             self.trashButton.selected=true
-            FavoriteRecipeViewController.dislikeID.append(self.idOfRecipe!)
+            let newDislikeObject=DislikeIDObject()
+            newDislikeObject.dislikeID=self.idOfRecipe
+            RealmHelperClass.addDislikeID(newDislikeObject)
+            InformationInputViewController.dislikeIDs=RealmHelperClass.retrieveDislikeIDObject()
+//            FavoriteRecipeViewController.dislikeID.append(self.idOfRecipe!)
                self.performSegueWithIdentifier("toRecipeListViewController", sender: self)
         })
         let cancelAction=UIAlertAction(title:"Cancel", style:UIAlertActionStyle.Default,handler:nil)
@@ -197,8 +199,14 @@ class DisplayRecipeViewController: UIViewController {
     
     func likeFunction(){
         likeButton.selected=true
-        FavoriteRecipeViewController.likeID.append(idOfRecipe)
-        getBasicInformationAndIngredients()
+        let newLikeObject=LikeIDObject()
+        newLikeObject.likeID=idOfRecipe
+        RealmHelperClass.addLikeID(newLikeObject)
+        InformationInputViewController.likeIDs=RealmHelperClass.retrieveLikeIDObject()
+//        FavoriteRecipeViewController.likeID.append(idOfRecipe)
+        FavoriteRecipeViewController.favorites.append(newLikeItem!)
+        self.likeButton.selected=true
+       
     }
     func unlikeFunction(){
         likeButton.selected=false

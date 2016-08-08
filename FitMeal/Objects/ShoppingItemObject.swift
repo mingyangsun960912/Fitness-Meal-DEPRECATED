@@ -7,18 +7,13 @@
 //
 
 import UIKit
+import RealmSwift
 
-class ShoppingItemObject: NSObject {
-    var name:String
-    var unit:String
-    var number:String
-    var note:String
-    var priceEst:String
-    init(name:String,number:String,unit:String,priceEst:String,note:String) {
-        self.name=name
-        self.unit=unit
-        self.number=number
-        self.note=note
-        self.priceEst=priceEst
-    }
+class ShoppingItemObject: Object {
+    dynamic var name:String=""
+    dynamic var unit:String=""
+    dynamic var number:String=""
+    dynamic var note:String=""
+    dynamic var priceEst:String=""
+    
 }

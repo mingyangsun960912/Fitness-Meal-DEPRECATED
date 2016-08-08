@@ -6,5 +6,7 @@ target 'FitMeal' do
   use_frameworks!
     # Pods for FitMeal
      pod 'Alamofire'
+     pod 'RealmSwift' 
+     pod 'AlamofireImage'
  pod 'PopupDialog', '~> 0.3'
 end

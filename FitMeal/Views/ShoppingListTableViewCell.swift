@@ -57,12 +57,21 @@ class ShoppingListTableViewCell: UITableViewCell {
     
             // Create second button
             let buttonTwo = DefaultButton(title: "SAVE") {
+                if let item=self.item{
+                let newShoppingItem=ShoppingItemObject()
+                newShoppingItem.name=ratingVC.nameTextField.text!
+                newShoppingItem.number=ratingVC.quantityTextField.text!
+                newShoppingItem.unit=ratingVC.unitTextField.text!
+                newShoppingItem.note=ratingVC.noteTextView.text
+                newShoppingItem.priceEst=ratingVC.priceEstTextField.text!
+                RealmHelperClass.updateShoppingListItem(item, newShoppingListItem: newShoppingItem)
                 self.item!.name=ratingVC.nameTextField.text!
                 self.item!.number=ratingVC.quantityTextField.text!
                 self.item!.unit=ratingVC.unitTextField.text!
                 self.item!.note=ratingVC.noteTextView.text
                 self.item!.priceEst=ratingVC.priceEstTextField.text!
                 self.itemLabel.text = self.item!.name
+                }
                
             }
     

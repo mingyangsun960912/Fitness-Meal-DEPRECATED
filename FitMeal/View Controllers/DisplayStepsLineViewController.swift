@@ -46,7 +46,7 @@ class DisplayStepsProgressViewController: UIViewController, UITableViewDelegate 
         Alamofire.request(.GET, "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/\(idOfRecipe!)/analyzedInstructions?stepBreakdown=true", parameters: parameters as? [String : AnyObject], encoding:ParameterEncoding.URL , headers: head) .responseJSON{ response in
             switch response.result{
             case .Success(let value1):
-                print(response)
+           
                 let value = (value1 as! NSArray)[value1.count-1]
              
                 let stepsResultArray=value.objectForKey("steps") as! [NSDictionary]

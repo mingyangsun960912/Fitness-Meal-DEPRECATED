@@ -225,7 +225,7 @@ class CookViewController: UIViewController, UIPickerViewDelegate,UITextFieldDele
     
     func checkQueryOnly(checkString:String)->Bool{
      
-        let alphabetRegex = "[A-Za-z]+"
+        let alphabetRegex = "[A-Za-z ]+"
         let test=NSPredicate(format:"SELF MATCHES %@", alphabetRegex)
 
         return test.evaluateWithObject(checkString)

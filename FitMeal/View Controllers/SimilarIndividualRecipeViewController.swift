@@ -123,7 +123,7 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
        
         parameters["id"]=idOfRecipe
         parameters["includeNutrition"]=true
-        var iD=parameters["id"] as! Int
+        let iD=parameters["id"] as! Int
         Alamofire.request(.GET, "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/\(iD)/information?includeNutrition=true", parameters: parameters, encoding: ParameterEncoding.URL,headers: head) .responseJSON{ response in
             switch response.result{
             case .Success(let value):
@@ -133,7 +133,7 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
                 self.readyMinutes=value.objectForKey("readyInMinutes") as? Int
                 let wholeNutritionDic=value.objectForKey("nutrition") as? NSDictionary
                 let nutritionsArray=wholeNutritionDic!["nutrients"] as? [NSDictionary]
-                var ingredientList=value.objectForKey("extendedIngredients") as! [NSDictionary]
+                let ingredientList=value.objectForKey("extendedIngredients") as! [NSDictionary]
                 for eachNutrtion in nutritionsArray!{
                     let theTitle=eachNutrtion["title"] as! String
                     if(theTitle == "Fat"){
@@ -168,9 +168,9 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
                 //MARK:Get Ingredients Informaiton
                 
                 for eachIngredient in ingredientList{
-                    var name=eachIngredient["name"] as? String
-                    var imageURL=eachIngredient["image"] as? String
-                    var description=eachIngredient["originalString"] as? String
+                    let name=eachIngredient["name"] as? String
+                    let imageURL=eachIngredient["image"] as? String
+                    let description=eachIngredient["originalString"] as? String
                     if let imageURL=imageURL{
                         self.nameArray.append(name!)
                         self.imageArray.append(imageURL)
@@ -196,7 +196,7 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
         Alamofire.request(.GET, "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/\(idOfRecipe!)/analyzedInstructions?stepBreakdown=true", parameters: parameters as? [String : AnyObject], encoding:ParameterEncoding.URL , headers: head) .responseJSON{ response in
             switch response.result{
             case .Success(let value1):
-                print(response)
+               
                 let value = (value1 as! NSArray)[value1.count-1]
                 
                 let stepsResultArray=value.objectForKey("steps") as! [NSDictionary]

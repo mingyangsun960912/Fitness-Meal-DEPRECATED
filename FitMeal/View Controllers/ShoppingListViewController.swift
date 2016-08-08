@@ -8,17 +8,19 @@
 
 import UIKit
 import PopupDialog
+import RealmSwift
+
 class ShoppingListViewController: UIViewController,UITableViewDelegate {
     @IBOutlet weak var moneyLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var noResultUIView: UIView!
-    static var shoppingItems:[ShoppingItemObject]=[]
+    static var shoppingItems:Results<ShoppingItemObject>!
   
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource=self
         tableView.delegate=self
-          self.navigationController?.navigationBarHidden=false
+        ShoppingListViewController.shoppingItems=RealmHelperClass.retrieveShoppingListItems()
         // Do any additional setup after loading the view.
     }
     override func viewWillAppear(animated: Bool) {
@@ -59,8 +61,9 @@ class ShoppingListViewController: UIViewController,UITableViewDelegate {
         // Create second button
         let buttonTwo = DefaultButton(title: "SAVE") {
 
-            var newItem:ShoppingItemObject=ratingVC.returnANewItem()
-            ShoppingListViewController.shoppingItems.append(newItem)
+            let newItem:ShoppingItemObject=ratingVC.returnANewItem()
+           RealmHelperClass.addShoppingListItem(newItem)
+            ShoppingListViewController.shoppingItems=RealmHelperClass.retrieveShoppingListItems()
              self.tableView.reloadData()
             self.noResultUIView.hidden=true
             self.tableView.hidden=false
@@ -123,7 +126,7 @@ extension ShoppingListViewController:UITableViewDataSource{
         // 2
         if editingStyle == .Delete {
             // 3
-            ShoppingListViewController.shoppingItems.removeAtIndex(indexPath.row)
+            RealmHelperClass.deleteShoppingListItem(ShoppingListViewController.shoppingItems[indexPath.row])
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
             // 4
             if(ShoppingListViewController.shoppingItems.count==0){
