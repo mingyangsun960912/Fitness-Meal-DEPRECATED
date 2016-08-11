@@ -8,5 +8,6 @@ target 'FitMeal' do
      pod 'Alamofire'
      pod 'RealmSwift' 
      pod 'AlamofireImage'
+     pod 'KDCircularProgress'
  pod 'PopupDialog', '~> 0.3'
 end

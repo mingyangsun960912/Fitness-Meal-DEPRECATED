@@ -22,6 +22,7 @@ class CookViewController: UIViewController, UIPickerViewDelegate,UITextFieldDele
     let MMtextAlignment: String = "textAlignment"
     let MMshowsSelectionIndicator: String = "showsSelectionIndicator"
 
+    @IBOutlet weak var backgroundImageView: UIImageView!
     var cusine=["African", "Chinese", "Japanese", "Korean", "Vetnamese", "Thai", "Indian", "British", "Irish", "French", "Italian", "Mexican", "Spanish", "Middle eastern", "Jewish", "American", "Cajun", "Southern", "Greek", "German", "Nordic", "Eastern european", "Caribbean", "Latin American",""]
     var intolerance=["Dairy", "Egg", "Gluten", "Peanut", "Sesame", "Seafood", "Shellfish", "Soy", "Sulfite", "Tree nut", "Wheat",""]
     var type=["Main course", "Side dish", "Dessert", "Appetizer", "Salad", "Bread", "Breakfast", "Soup", "Beverage", "Sauce", "Drink",""]
@@ -46,6 +47,7 @@ class CookViewController: UIViewController, UIPickerViewDelegate,UITextFieldDele
     @IBOutlet weak var carbsMaxTextField: UITextField!
     @IBOutlet weak var fatMinTextField: UITextField!
     @IBOutlet weak var fatMaxTextField: UITextField!
+    let screenSize: CGRect = UIScreen.mainScreen().bounds
     
     @IBAction func clearAllButtonTapped(sender: AnyObject) {
         cusineTextField.text=""
@@ -88,14 +90,14 @@ class CookViewController: UIViewController, UIPickerViewDelegate,UITextFieldDele
             recipeListController.includeIngredients=includeTextField.text
             recipeListController.intolerances=intoleranceTextField.text
             recipeListController.maxCalories=Double(calMaxTextField.text!)
-            recipeListController.minCalories=Double(calMinTextField.text!)
+            recipeListController.minCalories=0
             recipeListController.maxCarbs=Double(carbsMaxTextField.text!)
-           recipeListController.minCarbs=Double(carbsMinTextField.text!)
+           recipeListController.minCarbs=0
             recipeListController.maxProtein=Double(proteinMaxTextField.text!)
-            recipeListController.minProtein=Double(proteinMinTextField.text!)
+            recipeListController.minProtein=0
            recipeListController.query=queryTextField.text
             recipeListController.maxFat=Double(fatMaxTextField.text!)
-            recipeListController.minFat=Double(fatMinTextField.text!)
+            recipeListController.minFat=0
             recipeListController.type=typeTextField.text!
             /*if typeTextField.text != ""{
                 recipeListController.type=typeTextField.text}
@@ -105,13 +107,32 @@ class CookViewController: UIViewController, UIPickerViewDelegate,UITextFieldDele
 
         }
     }
+    
+    @IBOutlet weak var searchButton: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
-        if(InformationInputViewController.suggestions != nil){
-            suggestionsTextView.text=InformationInputViewController.suggestions
-        }else{
-            suggestionsTextView.text=nil
-        }
+        self.backgroundImageView.frame=CGRectMake(0,0, screenSize.width, screenSize.height)
+   
+        self.backgroundImageView.image = UIImage(named: "WallPaperCus")
+        self.searchButton.layer.borderWidth=1
+        self.searchButton.layer.borderColor=UIColor.whiteColor().CGColor
+        self.searchButton.layer.cornerRadius=2
+        let buttonColor=UIColor(red:249.0, green:250.0,blue: 251.0, alpha: 0.75)
+        self.searchButton.backgroundColor=buttonColor
+  
+        let placeHolderColor:UIColor=UIColor(red:255.0,green:255.0,blue:255.0, alpha:0.5)
+        excludeTextField.attributedPlaceholder = NSAttributedString(string:"ex: peanut",
+                                                                   attributes:[NSForegroundColorAttributeName: placeHolderColor])
+        queryTextField.attributedPlaceholder = NSAttributedString(string:"Only one, ex: burger",
+                                                                 attributes:[NSForegroundColorAttributeName: placeHolderColor])
+        calMaxTextField.attributedPlaceholder = NSAttributedString(string:"max",
+                                                                  attributes:[NSForegroundColorAttributeName: placeHolderColor])
+        proteinMaxTextField.attributedPlaceholder = NSAttributedString(string:"max",
+                                                                       attributes:[NSForegroundColorAttributeName: placeHolderColor])
+        carbsMaxTextField.attributedPlaceholder = NSAttributedString(string:"max",
+                                                                    attributes:[NSForegroundColorAttributeName: placeHolderColor])
+        fatMaxTextField.attributedPlaceholder = NSAttributedString(string:"max",
+                                                                   attributes:[NSForegroundColorAttributeName: placeHolderColor])
         cusineTextField.tag=0
         intoleranceTextField.tag=1
         typeTextField.tag=2
@@ -204,8 +225,8 @@ class CookViewController: UIViewController, UIPickerViewDelegate,UITextFieldDele
             return false
         }
         }
-        if(calMaxTextField.text != "" || calMinTextField.text != "" || carbsMaxTextField.text != "" || carbsMinTextField.text != "" || proteinMaxTextField.text != "" || proteinMinTextField.text != "" || fatMaxTextField.text != "" || fatMinTextField.text != ""){
-        if(checkNumberOnly(calMaxTextField.text!) == false || checkNumberOnly(calMinTextField.text!) == false || checkNumberOnly(proteinMaxTextField.text!) == false || checkNumberOnly(proteinMinTextField.text!) == false || checkNumberOnly(fatMaxTextField.text!) == false || checkNumberOnly(fatMinTextField.text!) == false || checkNumberOnly(carbsMaxTextField.text!) == false || checkNumberOnly(carbsMinTextField.text!) == false){
+        if(calMaxTextField.text != "" ||  carbsMaxTextField.text != "" || proteinMaxTextField.text != "" || fatMaxTextField.text != "" ){
+        if(checkNumberOnly(calMaxTextField.text!) == false || checkNumberOnly(proteinMaxTextField.text!) == false  || checkNumberOnly(fatMaxTextField.text!) == false  || checkNumberOnly(carbsMaxTextField.text!) == false ){
             invalidInputError()
             print("error number")
             return false

@@ -53,7 +53,13 @@ class RatingViewController: UIViewController {
         
     }
     func returnANewItem()->ShoppingItemObject{
-        return ShoppingItemObject(name:nameTextField.text!,number:quantityTextField.text!,unit:unitTextField.text!,priceEst:priceEstTextField.text!,note:noteTextView.text!)
+        let updatedShoppingItemObject=ShoppingItemObject()
+        updatedShoppingItemObject.name=nameTextField.text!
+        updatedShoppingItemObject.number=quantityTextField.text!
+        updatedShoppingItemObject.unit=unitTextField.text!
+        updatedShoppingItemObject.priceEst=priceEstTextField.text!
+        updatedShoppingItemObject.note=noteTextView.text!
+        return updatedShoppingItemObject
     }
    
     

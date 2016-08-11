@@ -24,6 +24,7 @@ class DisplayRecipeViewController: UIViewController {
     @IBOutlet weak var proteinLabel: UILabel!
     @IBOutlet weak var fatLabel: UILabel!
     var originalStringArray:[String]=[]
+    var imageurl:String=""
     var image:UIImage!
     var titleForRecipe:String!
     var fat:String!
@@ -41,21 +42,37 @@ class DisplayRecipeViewController: UIViewController {
     var newLikeItem:FavoriteRecipeObject?
     override func viewDidLoad() {
         super.viewDidLoad()
-               showRecipe()
+        self.recipeTitle.text=""
+        self.cookMinutesLabel.text=""
+        self.servingLabel.text=""
+        self.caloriesLabel.text=""
+        self.carbsLabel.text=""
+        self.proteinLabel.text=""
+        self.fatLabel.text=""
         self.likeButton.hidden=true
         self.trashButton.hidden=true
+        self.likeButton.layer.shadowOffset=CGSize(width:2, height:2)
+        self.likeButton.layer.shadowOpacity = 0.7
+        self.likeButton.layer.shadowRadius = 2
+        self.trashButton.layer.shadowOffset=CGSize(width:2, height:2)
+        self.trashButton.layer.shadowOpacity = 0.7
+        self.trashButton.layer.shadowRadius = 2
+        
+        showRecipe()
         getBasicInformationAndIngredients()
         // Do any additional setup after loading the view.
     }
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
+        
 
-        if(FavoriteRecipeViewController.likeID.contains(idOfRecipe)){
+
+        if(InformationInputViewController.likeIDsList.contains(idOfRecipe)){
             likeButton.selected=true
         }else{
             likeButton.selected=false
         }
-        if(FavoriteRecipeViewController.dislikeID.contains(idOfRecipe)){
+        if(InformationInputViewController.dislikeIDsList.contains(idOfRecipe)){
             trashButton.selected=true
         }else{
             trashButton.selected=false
@@ -127,6 +144,7 @@ class DisplayRecipeViewController: UIViewController {
                 
                 for eachIngredient in ingredientList{
                     let imageURL=eachIngredient["image"] as? String
+                    
                     let description=eachIngredient["originalString"] as? String
                     if let imageURL=imageURL{
                         self.originalStringArray.append(description!)
@@ -134,7 +152,21 @@ class DisplayRecipeViewController: UIViewController {
                 }
                 self.getSteps({()->Void in
                     
-                    let newLikeItem=FavoriteRecipeObject(title:self.titleForRecipe,id:self.idOfRecipe,image:self.image,ingredients:self.originalStringArray, steps:self.stepsResult,fat:self.fat,protein:self.protein,calories:self.calories,carbs:self.carbs,servings:self.servings,readyInTime:self.readyTime)
+//                    let newLikeItem=FavoriteRecipeObject(title:self.titleForRecipe,id:self.idOfRecipe,image:self.image,ingredients:self.originalStringArray, steps:self.stepsResult,fat:self.fat,protein:self.protein,calories:self.calories,carbs:self.carbs,servings:self.servings,readyInTime:self.readyTime)
+                    let newLikeItem=FavoriteRecipeObject()
+                    newLikeItem.title=self.titleForRecipe
+                    newLikeItem.id=self.idOfRecipe
+                    newLikeItem.image=self.imageurl
+                    let ingredientString=self.originalStringArray.joinWithSeparator("||")
+                    newLikeItem.ingredients=ingredientString
+                    let stepString=self.stepsResult.joinWithSeparator("||")
+                    newLikeItem.steps=stepString
+                    newLikeItem.fat=self.fat
+                    newLikeItem.protein=self.protein
+                    newLikeItem.calories=self.calories
+                    newLikeItem.carbs=self.carbs
+                    newLikeItem.servings=self.servings
+                    newLikeItem.readyInTime=self.readyTime
                     self.newLikeItem=newLikeItem
                     self.likeButton.hidden=false
                     self.trashButton.hidden=false
@@ -184,7 +216,9 @@ class DisplayRecipeViewController: UIViewController {
             let newDislikeObject=DislikeIDObject()
             newDislikeObject.dislikeID=self.idOfRecipe
             RealmHelperClass.addDislikeID(newDislikeObject)
+            InformationInputViewController.dislikeIDsList.append(self.idOfRecipe!)
             InformationInputViewController.dislikeIDs=RealmHelperClass.retrieveDislikeIDObject()
+           
 //            FavoriteRecipeViewController.dislikeID.append(self.idOfRecipe!)
                self.performSegueWithIdentifier("toRecipeListViewController", sender: self)
         })
@@ -203,25 +237,40 @@ class DisplayRecipeViewController: UIViewController {
         newLikeObject.likeID=idOfRecipe
         RealmHelperClass.addLikeID(newLikeObject)
         InformationInputViewController.likeIDs=RealmHelperClass.retrieveLikeIDObject()
+         InformationInputViewController.likeIDsList.append(idOfRecipe)
 //        FavoriteRecipeViewController.likeID.append(idOfRecipe)
-        FavoriteRecipeViewController.favorites.append(newLikeItem!)
+        RealmHelperClass.addFavoriteRecipe(newLikeItem!)
+        FavoriteRecipeViewController.favorites=RealmHelperClass.retrieveFavoriteRecipes()
+//        FavoriteRecipeViewController.favorites.append(newLikeItem!)
+       
         self.likeButton.selected=true
        
     }
     func unlikeFunction(){
         likeButton.selected=false
-        if let index=FavoriteRecipeViewController.likeID.indexOf(idOfRecipe){
-        FavoriteRecipeViewController.likeID.removeAtIndex(index)
+        let realm=try! Realm()
+        let unlikeIDObject=realm.objects(LikeIDObject).filter("likeID=\(self.idOfRecipe)")
+        RealmHelperClass.deleteLikeID(unlikeIDObject)
+        InformationInputViewController.likeIDs = RealmHelperClass.retrieveLikeIDObject()
+        if let index=InformationInputViewController.likeIDsList.indexOf(idOfRecipe){
+        InformationInputViewController.likeIDsList.removeAtIndex(index)
         }
+        RealmHelperClass.deleteFavoriteRecipe(newLikeItem!)
+        FavoriteRecipeViewController.favorites=RealmHelperClass.retrieveFavoriteRecipes()
     }
+    
     func trashFunction(){
  
         trashWarning()
     }
     func untrashFunction(){
         trashButton.selected=false
-        if let index=FavoriteRecipeViewController.dislikeID.indexOf(idOfRecipe){
-        FavoriteRecipeViewController.dislikeID.removeAtIndex(index)
+        let realm = try! Realm()
+        let untrashIDObject = realm.objects(DislikeIDObject).filter("dislikeID=\(self.idOfRecipe)")
+        RealmHelperClass.deleteDislikeID(untrashIDObject)
+        InformationInputViewController.dislikeIDs=RealmHelperClass.retrieveDislikeIDObject()
+        if let index=InformationInputViewController.dislikeIDsList.indexOf(idOfRecipe){
+        InformationInputViewController.dislikeIDsList.removeAtIndex(index)
         }
     }
     /*

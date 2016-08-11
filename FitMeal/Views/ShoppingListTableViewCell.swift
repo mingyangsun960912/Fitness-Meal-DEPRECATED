@@ -16,9 +16,11 @@ class ShoppingListTableViewCell: UITableViewCell {
     @IBAction func checkButtonTapped(sender: UIButton) {
         if(checkButton.selected){
             checkButton.selected=false
-            
+            RealmHelperClass.updateItemStatus(item!, status: false)
         }else{
             checkButton.selected=true
+            RealmHelperClass.updateItemStatus(item!, status: true)
+
         }
     }
     override func awakeFromNib() {
@@ -64,6 +66,7 @@ class ShoppingListTableViewCell: UITableViewCell {
                 newShoppingItem.unit=ratingVC.unitTextField.text!
                 newShoppingItem.note=ratingVC.noteTextView.text
                 newShoppingItem.priceEst=ratingVC.priceEstTextField.text!
+                newShoppingItem.finish=item.finish
                 RealmHelperClass.updateShoppingListItem(item, newShoppingListItem: newShoppingItem)
                 self.item!.name=ratingVC.nameTextField.text!
                 self.item!.number=ratingVC.quantityTextField.text!

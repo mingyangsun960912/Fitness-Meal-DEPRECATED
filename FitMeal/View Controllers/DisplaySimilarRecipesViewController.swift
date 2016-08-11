@@ -23,6 +23,7 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
     var selectedImage:UIImage?
     var similarRecipes: [SimilarRecipeObject]=[]
     var titleOfRecipe:String?
+    var selectedImageURL:String=""
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -66,7 +67,7 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
                     if(id==509856){
                         continue
                     }
-                    if(FavoriteRecipeViewController.dislikeID.contains(id)){
+                    if(InformationInputViewController.dislikeIDsList.contains(id)){
                         continue
                     }
                     let imagePartUrl=eachResultDic["image"] as! String
@@ -99,7 +100,7 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
             let destination=segue.destinationViewController as! SimilarIndividualRecipeViewController
           
             destination.idOfRecipe=self.chosenRecipeId!
-            destination.image=self.selectedImage!
+            destination.imageurl=self.selectedImageURL
             destination.titleOfRecipe=self.titleOfRecipe!
             
         }
@@ -131,11 +132,12 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
        
         self.selectedImage=cell.similarRecipeImageView.image
         self.titleOfRecipe=cell.recipeNameLabel.text
+        self.selectedImageURL=cell.imageUrl
               self.performSegueWithIdentifier("toIndividualRecipe", sender: self)
     }
     @IBAction func unwindToDisplaySimilarRecipesViewController(segue: UIStoryboardSegue) {
         for eachItem in similarRecipes{
-            if FavoriteRecipeViewController.dislikeID.contains(eachItem.id){
+            if InformationInputViewController.dislikeIDsList.contains(eachItem.id){
                 if let index=similarRecipes.indexOf(eachItem){
                     similarRecipes.removeAtIndex(index)
                 }
@@ -157,15 +159,14 @@ extension DisplaySimilarRecipesViewController:UITableViewDataSource{
         
         let cell = tableView.dequeueReusableCellWithIdentifier("SimilarRecipeCell",
                                                                forIndexPath: indexPath) as! SimilarRecipeTableViewCell
+        cell.similarRecipeImageView.image=nil
         cell.recipeNameLabel.hidden=true
         let cellObject = similarRecipes[indexPath.row]
         cell.idOfRecipe=cellObject.id
-        print(cell.idOfRecipe)
-         print(cellObject.imageURL)
+        cell.imageUrl=cellObject.imageURL
  
         imageDownloadHelper.sharedLoader.imageForUrl(cellObject.imageURL, completionHandler:{(image: UIImage?, url: String) in
             cell.similarRecipeImageView.image=image
-            
             cell.recipeNameLabel.text=cellObject.title
             cell.recipeNameLabel.hidden=false
             //+"\n"+"Cooking Time: "+String(cellObject.readyInMinutes)+" minutes"

@@ -68,8 +68,17 @@ class RealmHelperClass {
             shoppingListItemToBeUpdated.number=newShoppingListItem.number
             shoppingListItemToBeUpdated.unit=newShoppingListItem.unit
             shoppingListItemToBeUpdated.priceEst=newShoppingListItem.priceEst
+            shoppingListItemToBeUpdated.finish=newShoppingListItem.finish
             
         }
+    }
+    static func updateItemStatus(shoppingListItemToBeUpdated:ShoppingItemObject, status:Bool){
+        let realm = try! Realm()
+        try! realm.write() {
+            shoppingListItemToBeUpdated.finish=status
+            
+        }
+
     }
     static func retrieveShoppingListItems() -> Results<ShoppingItemObject> {
         let realm = try! Realm()

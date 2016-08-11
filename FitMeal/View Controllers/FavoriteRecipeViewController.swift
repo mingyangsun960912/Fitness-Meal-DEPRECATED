@@ -34,7 +34,11 @@ class FavoriteRecipeViewController: UIViewController,UICollectionViewDelegate, U
         }
         // Do any additional setup after loading the view.
     }
-
+    override func viewWillAppear(animated: Bool) {
+         
+        self.collectionView.reloadData()
+       
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -75,7 +79,7 @@ class FavoriteRecipeViewController: UIViewController,UICollectionViewDelegate, U
             let indexPaths=collectionView.indexPathsForSelectedItems()
             let indexPath=indexPaths![0]
             let item:FavoriteRecipeObject?
-            if(searchActive) {
+            if(searchActive && searchBar.text != "") {
              item=filtered[indexPath.row]
             }else{
              item=FavoriteRecipeViewController.favorites[indexPath.row]
@@ -104,7 +108,7 @@ class FavoriteRecipeViewController: UIViewController,UICollectionViewDelegate, U
 
 extension FavoriteRecipeViewController:UICollectionViewDataSource{
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if(searchActive) {
+        if(searchActive && searchBar.text != "") {
             return filtered.count
         }
         return FavoriteRecipeViewController.favorites.count
@@ -114,10 +118,21 @@ extension FavoriteRecipeViewController:UICollectionViewDataSource{
     }
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell=collectionView.dequeueReusableCellWithReuseIdentifier("FavoriteRecipeCell", forIndexPath: indexPath) as! FavoriteRecipeCollectionViewCell
-        if(searchActive){
-            cell.recipeImage.image = filtered[indexPath.row].image
+        if(searchActive && searchBar.text != ""){
+            let imageUrl=filtered[indexPath.row].image
+            imageDownloadHelper.sharedLoader.imageForUrl(imageUrl, completionHandler:{(image: UIImage?, url: String) in
+                
+                cell.recipeImage.image=image
+               
+            })
+           
         } else {
-             cell.recipeImage.image=FavoriteRecipeViewController.favorites[indexPath.row].image
+            let imageUrl=FavoriteRecipeViewController.favorites[indexPath.row].image
+            imageDownloadHelper.sharedLoader.imageForUrl(imageUrl, completionHandler:{(image: UIImage?, url: String) in
+                cell.recipeImage.image=image
+            })
+
+          
         }
        
         return cell

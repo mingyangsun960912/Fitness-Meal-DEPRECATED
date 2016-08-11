@@ -34,15 +34,20 @@ class InformationInputViewController: UIViewController {
     var height:Int!
     var age:Int!
     var modeStatus:Int!
+    @IBOutlet weak var tipsButton: UIButton!
     
     @IBOutlet weak var tipsTextView: UITextView!
+    
+    @IBOutlet weak var backgroundImageView: UIImageView!
     
     //MARK: all critical information text fields
     @IBOutlet weak var genderTextField: UITextField!
     @IBOutlet weak var ageTextField: UITextField!
     @IBOutlet weak var heightTextField: UITextField!
     @IBOutlet weak var weightTextField: UITextField!
+    @IBOutlet weak var cookButton: UIButton!
     
+    @IBOutlet weak var restaurantButton: UIButton!
     //MARK: selector outlets
     @IBOutlet weak var statusSelector: UISegmentedControl!
     @IBOutlet weak var modeSelector: UISegmentedControl!
@@ -51,11 +56,57 @@ class InformationInputViewController: UIViewController {
     
     static var likeIDs: Results<LikeIDObject>!
     static var dislikeIDs:Results<DislikeIDObject>!
+    static var likeIDsList:[Int]=[]
+    static var dislikeIDsList:[Int]=[]
     
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var frontView: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
+         self.tipsTextView.text=""
+        self.tipsTextView.font=UIFont(name:"Times New Roman",size:17)
+        self.backgroundImageView.image = UIImage(named: "WallPaper")
+        let placeHolderColor:UIColor=UIColor(red:255.0,green:255.0,blue:255.0, alpha:0.5)
+        genderTextField.attributedPlaceholder = NSAttributedString(string:"M/F",
+                                                               attributes:[NSForegroundColorAttributeName: placeHolderColor])
+        ageTextField.attributedPlaceholder = NSAttributedString(string:"0",
+                                                                attributes:[NSForegroundColorAttributeName: placeHolderColor])
+        heightTextField.attributedPlaceholder = NSAttributedString(string:"0.0 ft",
+                                                                   attributes:[NSForegroundColorAttributeName: placeHolderColor])
+        weightTextField.attributedPlaceholder = NSAttributedString(string:"0.0 lbs",
+                                                                   attributes:[NSForegroundColorAttributeName: placeHolderColor])
+        let attr = NSDictionary(object: UIFont(name: "American Typewriter", size: 13.0)!, forKey: NSFontAttributeName)
+        statusSelector.setTitleTextAttributes(attr as [NSObject : AnyObject] , forState: .Normal)
+        modeSelector.setTitleTextAttributes(attr as [NSObject : AnyObject] , forState: .Normal)
+        activeSelector.setTitleTextAttributes(attr as [NSObject : AnyObject] , forState: .Normal)
+        self.tipsButton.layer.borderWidth=1
+            self.tipsButton.layer.borderColor=UIColor.whiteColor().CGColor
+        self.tipsButton.layer.cornerRadius=6
+        self.tipsButton.backgroundColor=UIColor.whiteColor()
+        
+        self.cookButton.layer.borderWidth=1.5
+        self.cookButton.layer.borderColor=UIColor.blackColor().CGColor
+        self.cookButton.layer.cornerRadius=6
+        self.cookButton.backgroundColor=UIColor.whiteColor()
+        self.restaurantButton.layer.borderWidth=1.5
+        self.restaurantButton.layer.borderColor=UIColor.blackColor().CGColor
+        self.restaurantButton.layer.cornerRadius=6
+        self.restaurantButton.backgroundColor=UIColor.whiteColor()
+        self.view.backgroundColor=UIColor(red:220.0,green:220.0,blue:220.0,alpha:1.0)
+        self.scrollView.backgroundColor=UIColor(red:220.0,green:220.0,blue:220.0,alpha:1.0)
+        self.frontView.backgroundColor=UIColor(red:220.0,green:220.0,blue:220.0,alpha:1.0)
+        
         InformationInputViewController.likeIDs=RealmHelperClass.retrieveLikeIDObject()
         InformationInputViewController.dislikeIDs=RealmHelperClass.retrieveDislikeIDObject()
+        
+         var likeIDObject=Array<LikeIDObject>(InformationInputViewController.likeIDs)
+        for eachObject in likeIDObject{
+            InformationInputViewController.likeIDsList.append(eachObject.likeID)
+        }
+        var dislikeIDObject=Array<DislikeIDObject>(InformationInputViewController.dislikeIDs)
+        for eachObject in dislikeIDObject{
+            InformationInputViewController.dislikeIDsList.append(eachObject.dislikeID)
+        }
         // Do any additional setup after loading the view.
     }
 
@@ -66,7 +117,7 @@ class InformationInputViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-        self.tipsTextView.text=""
+       
         modeSelector.selectedSegmentIndex=0
         modeChoice()
         statusSelector.selectedSegmentIndex=0
@@ -93,7 +144,7 @@ class InformationInputViewController: UIViewController {
             mode="lose weight"
             eatAmount="less than this amount (500 cal less)."
             proteinIndex=1.2
-            fatIndex=0.5
+            fatIndex=0.8
             modeStatus=0
         case 1:
             mode="grow muscles"
@@ -180,8 +231,8 @@ class InformationInputViewController: UIViewController {
         caloriesHighLimit=Int(bmr * activityFactorHighLimit * 0.9)
         caloriesLowlimit=Int(bmr * activityFactorLowLimit * 0.9)
         if(modeStatus == 0){
-            caloriesLowlimit=caloriesLowlimit-400
-            caloriesHighLimit=caloriesHighLimit-400
+            caloriesLowlimit=caloriesLowlimit-300
+            caloriesHighLimit=caloriesHighLimit-300
         }
         if(modeStatus==1){
             caloriesLowlimit=caloriesLowlimit+150

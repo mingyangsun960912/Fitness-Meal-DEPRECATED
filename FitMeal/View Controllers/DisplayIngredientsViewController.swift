@@ -89,9 +89,16 @@ class DisplayIngredientsViewController: UIViewController, UITableViewDelegate {
     */
     func addingNewItemToCart(){
         for eachItem in self.nameArray{
-            
-            let newAddingItem=ShoppingItemObject(name:eachItem,number:"",unit:"",priceEst:"",note:"")
-            ShoppingListViewController.shoppingItems.append(newAddingItem)
+            let newAddingItem=ShoppingItemObject()
+            newAddingItem.name=eachItem
+            newAddingItem.unit=""
+            newAddingItem.priceEst=""
+            newAddingItem.note=""
+            newAddingItem.finish=false
+//            
+//            let newAddingItem=ShoppingItemObject(name:eachItem,number:"",unit:"",priceEst:"",note:"")
+            RealmHelperClass.addShoppingListItem(newAddingItem)
+            ShoppingListViewController.shoppingItems=RealmHelperClass.retrieveShoppingListItems()
         }
 
     }
@@ -113,6 +120,10 @@ extension DisplayIngredientsViewController:UITableViewDataSource{
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell=tableView.dequeueReusableCellWithIdentifier("IngredientListCell") as! IngredientListViewCell
+        cell.ingredientImageViewOne.image=nil
+        cell.ingredientImageViewTwo.image=nil
+        cell.descriptionTextViewOne.text=""
+        cell.descriptionTextViewTwo.text=""
         let row=indexPath.row
         let imageURLOne=imageArray[row*2]
         let ingredientDescriptionOne=originalStringArray[row*2]

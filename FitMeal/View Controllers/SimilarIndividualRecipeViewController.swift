@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import RealmSwift
 class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelegate
 {
     
@@ -30,6 +31,7 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
     @IBOutlet weak var stepTableView: UITableView!
     var idOfRecipe:Int?
     var image:UIImage?
+    var imageurl:String?
     var nameArray:[String]=[]
     var imageArray:[String]=[]
     var numberStringArray:[String]=[]
@@ -47,14 +49,25 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
     let head: [String: String] = [
         "X-Mashape-Key": "1C9TO0ENkpmsho9kJK5xKzEcSdJAp1XiAgsjsn5TythzmyNqSb",
         ]
+    var newLikeObject:FavoriteRecipeObject?
     var returnToLast:Bool=false
     override func viewDidLoad() {
         super.viewDidLoad()
-        if(FavoriteRecipeViewController.likeID.contains(idOfRecipe!)){
+        if(InformationInputViewController.likeIDsList.contains(idOfRecipe!)){
             likeButton.selected=true
         }else{
             likeButton.selected=false
         }
+        if(InformationInputViewController.dislikeIDsList.contains(idOfRecipe!)){
+            trashButton.selected=true
+        }else{
+            trashButton.selected=false
+        }
+//        if(FavoriteRecipeViewController.likeID.contains(idOfRecipe!)){
+//            likeButton.selected=true
+//        }else{
+//            likeButton.selected=false
+//        }
         titleLabel.text=titleOfRecipe
         self.RecipeImageVIew.image=image
      self.ingredientTableView.dataSource=self
@@ -274,7 +287,12 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
         let warnAlertController=UIAlertController(title:"Destroy Forever", message: "You won't see this recipe ever again, are you sure you want to completely destroy it?",preferredStyle: UIAlertControllerStyle.Alert)
         let yesAction=UIAlertAction(title:"Yes", style:UIAlertActionStyle.Default, handler: { (action: UIAlertAction!) in
             self.trashButton.selected=true
-            FavoriteRecipeViewController.dislikeID.append(self.idOfRecipe!)
+            let newDislikeIDObject=DislikeIDObject()
+            newDislikeIDObject.dislikeID=self.idOfRecipe!
+            RealmHelperClass.addDislikeID(newDislikeIDObject)
+            InformationInputViewController.dislikeIDs=RealmHelperClass.retrieveDislikeIDObject()
+            InformationInputViewController.dislikeIDsList.append(self.idOfRecipe!)
+//            FavoriteRecipeViewController.dislikeID.append(self.idOfRecipe!)
             self.performSegueWithIdentifier("toDisplaySimilarRecipesViewController", sender: self)
         })
         let cancelAction=UIAlertAction(title:"Cancel", style:UIAlertActionStyle.Default,handler:nil)
@@ -286,24 +304,66 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
     }
     func likeFunction(){
         likeButton.selected=true
-        FavoriteRecipeViewController.likeID.append(idOfRecipe!)
-        let newLikeItem=FavoriteRecipeObject(title:titleOfRecipe, id:idOfRecipe!,image:image!,ingredients:originalStringArray, steps:stepsResult, fat:fat!, protein:protein!, calories:calories!, carbs:carbs!, servings:servings!, readyInTime:readyMinutes!)
-        FavoriteRecipeViewController.favorites.append(newLikeItem)
+//        FavoriteRecipeViewController.likeID.append(idOfRecipe!)
+//        let newLikeItem=FavoriteRecipeObject(title:titleOfRecipe, id:idOfRecipe!,image:image!,ingredients:originalStringArray, steps:stepsResult, fat:fat!, protein:protein!, calories:calories!, carbs:carbs!, servings:servings!, readyInTime:readyMinutes!)
+//        FavoriteRecipeViewController.favorites.append(newLikeItem)
+        let newLikeItem=FavoriteRecipeObject()
+        newLikeItem.title=titleOfRecipe
+        newLikeItem.id=idOfRecipe!
+        newLikeItem.image=imageurl!
+        let ingredientsString=originalStringArray.joinWithSeparator("||")
+        newLikeItem.ingredients=ingredientsString
+        let stepsString=stepsResult.joinWithSeparator("||")
+        newLikeItem.steps=stepsString
+        newLikeItem.fat=fat!
+        newLikeItem.protein=protein!
+        newLikeItem.calories=calories!
+        newLikeItem.carbs=carbs!
+        newLikeItem.servings=servings!
+        newLikeItem.readyInTime=readyMinutes!
+        self.newLikeObject=newLikeItem
+        RealmHelperClass.addFavoriteRecipe(newLikeItem)
+        FavoriteRecipeViewController.favorites=RealmHelperClass.retrieveFavoriteRecipes()
+        let newlikeIDObject=LikeIDObject()
+        newlikeIDObject.likeID=self.idOfRecipe!
+        RealmHelperClass.addLikeID(newlikeIDObject)
+        InformationInputViewController.likeIDs=RealmHelperClass.retrieveLikeIDObject()
+        InformationInputViewController.likeIDsList.append(self.idOfRecipe!)
     }
     func unlikeFunction(){
         likeButton.selected=false
-        if let index=FavoriteRecipeViewController.likeID.indexOf(idOfRecipe!){
-            FavoriteRecipeViewController.likeID.removeAtIndex(index)
+        let realm=try! Realm()
+        let unlikeIDObject=realm.objects(LikeIDObject).filter("likeID=\(self.idOfRecipe)")
+        RealmHelperClass.deleteLikeID(unlikeIDObject)
+        RealmHelperClass.deleteFavoriteRecipe(self.newLikeObject!)
+        InformationInputViewController.likeIDs = RealmHelperClass.retrieveLikeIDObject()
+        FavoriteRecipeViewController.favorites=RealmHelperClass.retrieveFavoriteRecipes()
+        if let index=InformationInputViewController.likeIDsList.indexOf(idOfRecipe!){
+            InformationInputViewController.likeIDsList.removeAtIndex(index)
         }
+//
+//        likeButton.selected=false
+//        if let index=FavoriteRecipeViewController.likeID.indexOf(idOfRecipe!){
+//            FavoriteRecipeViewController.likeID.removeAtIndex(index)
+//        }
     }
     func trashFunction(){
         trashWarning()
     }
     func untrashFunction(){
         trashButton.selected=false
-        if let index=FavoriteRecipeViewController.dislikeID.indexOf(idOfRecipe!){
-            FavoriteRecipeViewController.dislikeID.removeAtIndex(index)
+        let realm = try! Realm()
+        let untrashIDObject = realm.objects(DislikeIDObject).filter("dislikeID=\(self.idOfRecipe)")
+        RealmHelperClass.deleteDislikeID(untrashIDObject)
+        InformationInputViewController.dislikeIDs=RealmHelperClass.retrieveDislikeIDObject()
+        if let index=InformationInputViewController.dislikeIDsList.indexOf(idOfRecipe!){
+            InformationInputViewController.dislikeIDsList.removeAtIndex(index)
         }
+
+//        trashButton.selected=false
+//        if let index=FavoriteRecipeViewController.dislikeID.indexOf(idOfRecipe!){
+//            FavoriteRecipeViewController.dislikeID.removeAtIndex(index)
+//        }
     }
 
     
@@ -331,9 +391,9 @@ extension SimilarIndividualRecipeViewController:UITableViewDataSource{
                    cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell:UITableViewCell?
         if(tableView==self.stepTableView){
-        let stepViewCell = tableView.dequeueReusableCellWithIdentifier("stepListCell",
+        let stepViewCell = tableView.dequeueReusableCellWithIdentifier("StepListCell",
                                                                forIndexPath: indexPath) as! SimilarRecipeStepTableViewCell
-        
+        stepViewCell.stepDescript.text=""
         let cellObject = cellObjects[indexPath.row]
         stepViewCell.stepDescript.text = cellObject.step
         stepViewCell.selectionStyle = .None
@@ -341,6 +401,8 @@ extension SimilarIndividualRecipeViewController:UITableViewDataSource{
         }
         if(tableView==self.ingredientTableView){
             let ingredientCell=tableView.dequeueReusableCellWithIdentifier("ingredientListCell") as! SimilarRecipeIngredientTableViewCell
+            ingredientCell.textViewOne.text=""
+            ingredientCell.textViewTwo.text=""
             let row=indexPath.row
             let imageURLOne=imageArray[row*2]
             let ingredientDescriptionOne=originalStringArray[row*2]

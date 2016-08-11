@@ -31,6 +31,7 @@
 		5B70F2E21D50152900264D48 /* ShoppingListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B70F2E11D50152900264D48 /* ShoppingListViewController.swift */; };
 		5B70F2E41D50156300264D48 /* ShoppingListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B70F2E31D50156300264D48 /* ShoppingListTableViewCell.swift */; };
 		5B70F2E61D504A1C00264D48 /* ShoppingItemObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B70F2E51D504A1C00264D48 /* ShoppingItemObject.swift */; };
+		5B7E55FE1D5B9FA0003C1BC4 /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7E55FD1D5B9FA0003C1BC4 /* KDCircularProgress.swift */; };
 		5B87B4531D471AFF00A6C616 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B2BFD6F1D344CB50099CC5F /* Main.storyboard */; };
 		5BAEC9401D5555C800734DF8 /* RealmHelperClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAEC93F1D5555C800734DF8 /* RealmHelperClass.swift */; };
 		5BB9F4601D492AE40079DD55 /* StepsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB9F45F1D492AE40079DD55 /* StepsTableViewCell.swift */; };
@@ -80,6 +81,7 @@
 		5B70F2E11D50152900264D48 /* ShoppingListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShoppingListViewController.swift; sourceTree = "<group>"; };
 		5B70F2E31D50156300264D48 /* ShoppingListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShoppingListTableViewCell.swift; sourceTree = "<group>"; };
 		5B70F2E51D504A1C00264D48 /* ShoppingItemObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShoppingItemObject.swift; sourceTree = "<group>"; };
+		5B7E55FD1D5B9FA0003C1BC4 /* KDCircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KDCircularProgress.swift; sourceTree = "<group>"; };
 		5BAEC93F1D5555C800734DF8 /* RealmHelperClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmHelperClass.swift; sourceTree = "<group>"; };
 		5BB9F45F1D492AE40079DD55 /* StepsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepsTableViewCell.swift; sourceTree = "<group>"; };
 		5BB9F4611D494E000079DD55 /* StepCellObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepCellObject.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 		5B0287F91D51132200E369E2 /* Special Views */ = {
 			isa = PBXGroup;
 			children = (
+				5B7E55FC1D5B9F86003C1BC4 /* Progress Views */,
 				5B0287FA1D51134100E369E2 /* Popup Views */,
 			);
 			path = "Special Views";
@@ -219,6 +222,14 @@
 			children = (
 			);
 			path = "Error Handling";
+			sourceTree = "<group>";
+		};
+		5B7E55FC1D5B9F86003C1BC4 /* Progress Views */ = {
+			isa = PBXGroup;
+			children = (
+				5B7E55FD1D5B9FA0003C1BC4 /* KDCircularProgress.swift */,
+			);
+			path = "Progress Views";
 			sourceTree = "<group>";
 		};
 		5BF751F71D3D522400998B25 /* Objects */ = {
@@ -387,6 +398,7 @@
 			files = (
 				5BF751F41D3D418F00998B25 /* RecipeListViewController.swift in Sources */,
 				5B2F48101D42B8E5005098ED /* IngredientListViewCell.swift in Sources */,
+				5B7E55FE1D5B9FA0003C1BC4 /* KDCircularProgress.swift in Sources */,
 				5B70F2DC1D4C028100264D48 /* SimilarRecipeIngredientTableViewCell.swift in Sources */,
 				5B70F2D41D49C4C700264D48 /* SimilarRecipeObject.swift in Sources */,
 				5BCC60731D528ABE00A8BF0B /* FavoriteRecipeObject.swift in Sources */,

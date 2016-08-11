@@ -102,7 +102,7 @@ extension DisplayStepsProgressViewController:UITableViewDataSource{
                    cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("stepCell",
                                                                forIndexPath: indexPath) as! StepsTableViewCell
-        
+        cell.stepDescriptionLabel.text=""
         let cellObject = cellObjects[indexPath.row]
         cell.stepDescriptionLabel.text = cellObject.step
        cell.selectionStyle = .None

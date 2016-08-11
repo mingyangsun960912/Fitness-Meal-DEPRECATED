@@ -13,6 +13,7 @@ class SimilarRecipeTableViewCell: UITableViewCell {
     @IBOutlet weak var recipeNameLabel: UILabel!
     @IBOutlet weak var similarRecipeImageView: UIImageView!
     var idOfRecipe:Int!
+    var imageUrl:String=""
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

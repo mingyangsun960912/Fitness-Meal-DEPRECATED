@@ -15,13 +15,16 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
     let head: [String: String] = [
         "X-Mashape-Key": "1C9TO0ENkpmsho9kJK5xKzEcSdJAp1XiAgsjsn5TythzmyNqSb",
         ]
-    
+    var progressFinish:Bool=false
+    var retreveFinish:Bool=false
  
     
     @IBOutlet weak var noResultsView: UIView!
+    var noResults:Bool=false
     var results:[NSDictionary]?
     var recipeResultDic:NSDictionary?
-    
+    var progressView:KDCircularProgress?
+    var resultRetrieve:Bool=false
     var cusine:String?
     var diet:String?
     var excludeIngredients:String?
@@ -37,8 +40,9 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
     var minFat:Double?
     var query:String?
     var type:String?
- 
     
+ 
+    var imageURL:String=""
     var image:UIImage?
     var titleOfRecipe:String?
     var fatResult:String?
@@ -56,7 +60,72 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
         self.RecipeTableView.delegate = self
         self.RecipeTableView.dataSource = self
         noResultsView.hidden=true
-        getAllResults()
+        RecipeTableView.hidden=true
+        self.getAllResults()
+        progressView = KDCircularProgress(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        progressView!.startAngle = -90
+        progressView!.progressThickness = 0.1
+        progressView!.trackThickness = 0.3
+        progressView!.clockwise = true
+        progressView!.center = view.center
+        progressView!.roundedCorners = true
+        progressView!.glowMode = .Constant
+        progressView!.setColors(UIColor.whiteColor())
+        progressView!.angle = 300
+        let screenSize:CGRect=UIScreen.mainScreen().bounds
+        
+        var loadingLabel = UILabel(frame: CGRectMake((progressView!.bounds.width - 150) / 2, (progressView!.bounds.height - 25) / 2, 150, 25))
+        loadingLabel.textAlignment=NSTextAlignment.Center
+        loadingLabel.text="Loading..."
+        loadingLabel.font=UIFont(name:"Times New Roman-Bold",size:22)
+    
+//        loadingLabel.center=progressView!.center
+       
+        progressView!.addSubview(loadingLabel)
+        view.addSubview(progressView!)
+        progressView!.animateFromAngle(0, toAngle: 360, duration: 13) { completed in
+            if completed {
+                self.progressFinish=true
+                if(self.retreveFinish==true){
+                    self.progressView?.hidden=true
+                    self.RecipeTableView.hidden=false
+                    self.noResultsView.hidden=true
+                }else{
+                    loadingLabel.text="Be patient..."
+                    self.progressView?.hidden=false
+                    self.RecipeTableView.hidden=true
+                    self.noResultsView.hidden=true
+                }
+            } else {
+                self.progressFinish=false
+            }
+        }
+        
+//        progressView!.animateFromAngle(0, toAngle: 360, duration: 15) { completed in
+//          
+//            if completed {
+//                if(self.resultRetrieve==true){
+//                    self.RecipeTableView.hidden=false
+//                    self.progressView!.hidden=true}
+//                else{
+////                    if(self.noResults==true){
+////                        self.noResultsView.hidden=false
+////                        self.RecipeTableView.hidden=true
+////                        self.progressView!.hidden=true}
+////                    else{
+////                        self.progressView!.hidden=false
+////                    }
+//                }
+//            } else {
+//                self.RecipeTableView.hidden=true
+//            }
+//        }
+
+
+//        self.RecipeTableView.delegate = self
+//        self.RecipeTableView.dataSource = self
+//              noResultsView.hidden=true
+//        getAllResults()
         // Do any additional setup after loading the view.
     }
 
@@ -135,6 +204,7 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
                 if (self.results!.isEmpty){
                     self.noResultsView.hidden=false
                     self.RecipeTableView.hidden=true
+                    self.progressView!.hidden=true
                     return
                 }
                 for recipeResultDic in self.results!{
@@ -148,7 +218,7 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
                     let protein=recipeResultDic["protein"] as? String ?? ""
                     let fat=recipeResultDic["fat"] as? String ?? ""
                     let Id=recipeResultDic["id"] as? Int ?? 0
-                if(FavoriteRecipeViewController.dislikeID.contains(Id)){
+                if(InformationInputViewController.dislikeIDsList.contains(Id)){
                         continue
                     }
                     let missedIngredientsCount=recipeResultDic["missedIngredientCount"] as? Int ?? 0
@@ -165,7 +235,19 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
                                 
                                 self.recipeList.append(eachSumRecipe!)
                                 dispatch_async(dispatch_get_main_queue()) {
+                                    self.resultRetrieve=true
                                     self.RecipeTableView.reloadData()
+                                    self.retreveFinish=true
+                                    if(self.progressFinish==false){
+                                        self.progressView!.hidden=false
+                                        self.RecipeTableView.hidden=true
+                                        self.noResultsView.hidden=true}
+                                    else{
+                                        self.progressView?.hidden=true
+                                        self.RecipeTableView.hidden=false
+                                        self.noResultsView.hidden=true
+                                    }
+                                    
                                 }
                             }
                         })
@@ -226,6 +308,7 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
                 let firstVC=destination.viewControllers![0] as! DisplayRecipeViewController
 
                 firstVC.image = self.image
+                firstVC.imageurl=self.imageURL
                 firstVC.titleForRecipe=self.titleOfRecipe
                 firstVC.fat=self.fatResult
                 firstVC.carbs=self.carbsResult
@@ -250,7 +333,7 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
     }
     @IBAction func unwindToRecipeListViewController(segue: UIStoryboardSegue) {
         for eachItem in recipeList{
-            if FavoriteRecipeViewController.dislikeID.contains(eachItem.id!){
+            if InformationInputViewController.dislikeIDsList.contains(eachItem.id!){
                 if let index=recipeList.indexOf(eachItem){
                     recipeList.removeAtIndex(index)
                 }
@@ -271,6 +354,7 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
         self.missedIngredientsString=cell.missedIngredients
         self.missedIngredientsCount=cell.missedIngredientsCount
         self.idOfRecipe=cell.idOfRecipe
+        self.imageURL=cell.imageURL
         self.performSegueWithIdentifier("toRecipeTabBarController", sender: self)
     }
 
@@ -291,6 +375,9 @@ extension RecipeListViewController:UITableViewDataSource{
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell=tableView.dequeueReusableCellWithIdentifier("RecipeListCell") as! RecipeListViewCellTableViewCell
+        let cellBackgroundColor=UIColor(red:238.0,green:238.0, blue: 238.0, alpha: 1)
+        cell.contentView.backgroundColor=cellBackgroundColor
+        cell.recipePicImageView.image=nil
         let row=indexPath.row
         let recipeSum=recipeList[row]
         cell.recipeTitleTextView.font = UIFont.boldSystemFontOfSize(22)
@@ -303,7 +390,7 @@ extension RecipeListViewController:UITableViewDataSource{
         cell.servings=recipeSum.servings
         cell.readyMinutes=recipeSum.readyMinutes
         cell.missedIngredientsCount=recipeSum.missedIngredientsCount!
-        
+        cell.imageURL=recipeSum.image
         cell.idOfRecipe=recipeSum.id
       
         imageDownloadHelper.sharedLoader.imageForUrl(recipeSum.image, completionHandler:{(image: UIImage?, url: String) in

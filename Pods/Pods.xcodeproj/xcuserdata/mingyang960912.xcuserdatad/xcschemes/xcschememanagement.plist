@@ -19,6 +19,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>KDCircularProgress.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-FitMeal.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -47,17 +52,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>0ED7B28F0316CEAE2175190C6261388E</key>
+		<key>54EF243C4FF15782E0B626B42AF3D03B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>25601C183F2CA9E93D882168225C12A8</key>
+		<key>675525C9A9599A05BA8B7CE6AF5ACE38</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>682FABEA246523A8C79EB1873F089272</key>
+		<key>6A6AFDFB119A15451794FE73A4121C65</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -67,12 +72,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>9558B32FB980ED0E42BF1BD3AEC626CE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>CD378EDFF42487A7E1BB47D45223953B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F784D199FB03A91AF46E3B1C74122E50</key>
+		<key>CEFC65C5AD3C9B4CAA43B826AE69C60A</key>
 		<dict>
 			<key>primary</key>
 			<true/>

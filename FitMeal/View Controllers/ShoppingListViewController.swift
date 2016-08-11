@@ -116,6 +116,7 @@ extension ShoppingListViewController:UITableViewDataSource{
                 let item=ShoppingListViewController.shoppingItems[row]
                 cell.item=item
                 cell.itemLabel.text=item.name
+                cell.checkButton.selected=item.finish
         
         }else{
             cell.itemLabel.text=""

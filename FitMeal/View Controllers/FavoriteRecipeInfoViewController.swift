@@ -34,7 +34,12 @@ class FavoriteRecipeInfoViewController: UIViewController,UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         likeButton.selected=true
-        self.RecipeImageVIew.image=favoriteRecipe?.image
+        let imageURL=favoriteRecipe?.image
+        imageDownloadHelper.sharedLoader.imageForUrl(imageURL!, completionHandler:{(image: UIImage?, url: String) in
+                  self.RecipeImageVIew.image=image
+        })
+
+  
         self.ingredientTableView.dataSource=self
         self.ingredientTableView.delegate=self
         self.stepTableView.dataSource=self
@@ -128,7 +133,9 @@ class FavoriteRecipeInfoViewController: UIViewController,UITableViewDelegate {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let identifier = segue.identifier {
             if identifier == "toFavoriteCollectionViewController" {
-                print("Cancel button tapped")
+                let destination = segue.destinationViewController as! FavoriteRecipeViewController
+                destination.searchActive=false
+                
             }
         }
     }
@@ -160,7 +167,9 @@ class FavoriteRecipeInfoViewController: UIViewController,UITableViewDelegate {
         likeButton.selected=false
         let realm = try! Realm()
         let unlikeIDObject = realm.objects(LikeIDObject).filter("likeID = \(favoriteRecipe!.id)")
+        RealmHelperClass.deleteFavoriteRecipe(favoriteRecipe!)
         RealmHelperClass.deleteLikeID(unlikeIDObject)
+        FavoriteRecipeViewController.favorites=RealmHelperClass.retrieveFavoriteRecipes()
         InformationInputViewController.likeIDs=RealmHelperClass.retrieveLikeIDObject()
 //        if let index=FavoriteRecipeViewController.likeID.indexOf((favoriteRecipe?.id)!){
 //            FavoriteRecipeViewController.likeID.removeAtIndex(index)
@@ -191,12 +200,14 @@ extension FavoriteRecipeInfoViewController:UITableViewDataSource{
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var cellNumber:Int=0
         if(tableView==self.stepTableView){
-            cellNumber=(favoriteRecipe?.steps)!.count
+            let stepsArray=favoriteRecipe!.steps.componentsSeparatedByString("||")
+            cellNumber=stepsArray.count
         }else if(tableView==self.ingredientTableView){
-            if((favoriteRecipe?.ingredients)!.count % 2 == 0){
-                cellNumber=(favoriteRecipe?.ingredients)!.count/2
+            let ingredientArray=favoriteRecipe!.ingredients.componentsSeparatedByString("||")
+            if(ingredientArray.count % 2 == 0){
+                cellNumber=ingredientArray.count/2
             }else{
-                cellNumber=(favoriteRecipe?.ingredients)!.count/2+1
+                cellNumber=ingredientArray.count/2+1
             }
         }
         return cellNumber
@@ -208,19 +219,23 @@ extension FavoriteRecipeInfoViewController:UITableViewDataSource{
         if(tableView==self.stepTableView){
             let stepViewCell = tableView.dequeueReusableCellWithIdentifier("stepListCell",
                                                                            forIndexPath: indexPath) as! SimilarRecipeStepTableViewCell
-            
-            stepViewCell.stepDescript.text = (favoriteRecipe?.steps[indexPath.row])!
+            stepViewCell.stepDescript.text=""
+            let stepsArray=favoriteRecipe!.steps.componentsSeparatedByString("||")
+            stepViewCell.stepDescript.text = stepsArray[indexPath.row]
             stepViewCell.selectionStyle = .None
             return stepViewCell
         }
         if(tableView==self.ingredientTableView){
             let ingredientCell=tableView.dequeueReusableCellWithIdentifier("ingredientListCell") as! FavoriteRecipeIngredientTableViewCell
             let row=indexPath.row
-            let ingredientDescriptionOne=(favoriteRecipe?.ingredients[row*2])!
+             let ingredientsArray=favoriteRecipe!.ingredients.componentsSeparatedByString("||")
+            let ingredientDescriptionOne=ingredientsArray[row*2]
+            ingredientCell.ingredientFirstLabel.text=""
             ingredientCell.ingredientFirstLabel.text=ingredientDescriptionOne
            
-            if(row*2+1<=favoriteRecipe!.ingredients.count-1){
-           let ingredientDescriptionTwo=favoriteRecipe!.ingredients[row*2+1]
+            if(row*2+1<=ingredientsArray.count-1){
+           let ingredientDescriptionTwo=ingredientsArray[row*2+1]
+            ingredientCell.ingredientSecondLabel.text=""
             ingredientCell.ingredientSecondLabel.text=ingredientDescriptionTwo
                 
             }

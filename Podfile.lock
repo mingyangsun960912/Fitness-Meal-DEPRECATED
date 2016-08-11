@@ -3,6 +3,7 @@ PODS:
   - AlamofireImage (2.4.1):
     - Alamofire (~> 3.3)
   - FXBlurView (1.6.4)
+  - KDCircularProgress (1.4.1)
   - PopupDialog (0.3.0):
     - FXBlurView
   - Realm (1.0.2):
@@ -14,6 +15,7 @@ PODS:
 DEPENDENCIES:
   - Alamofire
   - AlamofireImage
+  - KDCircularProgress
   - PopupDialog (~> 0.3)
   - RealmSwift
 
@@ -21,10 +23,11 @@ SPEC CHECKSUMS:
   Alamofire: 01a82e2f6c0f860ade35534c8dd88be61bdef40c
   AlamofireImage: 3ccf3347d9ea24580dc11fb892770a0be6a29826
   FXBlurView: db786c2561cb49a09ae98407f52460096ab8a44f
+  KDCircularProgress: c931181cbe3fe988a93250ac700c5a0d8b90e2bf
   PopupDialog: 6d911ffba0607b89a4d310a036bc1ced9e7e9d80
   Realm: 9d5c46a4d7d27958530a8dfc58f63a99e5c2cba3
   RealmSwift: 82f3ac5e24530143dddfde2033acc0d308f27d96
 
-PODFILE CHECKSUM: b3bb3cd3d9c2bc94bd6ecf70282840219e006207
+PODFILE CHECKSUM: 91b5aa14be3e7592680b28aca05bb8585a966f68
 
 COCOAPODS: 1.0.1
