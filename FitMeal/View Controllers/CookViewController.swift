@@ -31,6 +31,20 @@ class CookViewController: UIViewController, UIPickerViewDelegate,UITextFieldDele
     
     var multiSelectedStringCusine:[String]=[]
     
+    @IBOutlet weak var includeLabel: UILabel!
+    @IBOutlet weak var excludeLabel: UILabel!
+    @IBOutlet weak var cusineLabel: UILabel!
+    @IBOutlet weak var intoleranceLabel: UILabel!
+    @IBOutlet weak var dietLabel: UILabel!
+    @IBOutlet weak var typeLabel: UILabel!
+    @IBOutlet weak var queryLabel: UILabel!
+    
+    @IBOutlet weak var caloriesLabel: UILabel!
+    @IBOutlet weak var proteinLabel: UILabel!
+    @IBOutlet weak var carbsLabel: UILabel!
+    @IBOutlet weak var fatLabel: UILabel!
+    
+    
     @IBOutlet weak var cusineTextField: UITextField!
     @IBOutlet weak var suggestionsTextView: UITextView!
     @IBOutlet weak var intoleranceTextField: UITextField!
@@ -119,7 +133,21 @@ class CookViewController: UIViewController, UIPickerViewDelegate,UITextFieldDele
         self.searchButton.layer.cornerRadius=2
         let buttonColor=UIColor(red:249.0, green:250.0,blue: 251.0, alpha: 0.75)
         self.searchButton.backgroundColor=buttonColor
-  
+        if(UIScreen.mainScreen().bounds.height<=568){
+            let FontAmerican=UIFont(name:"American Typewriter",size:14.0)
+            includeLabel.font=FontAmerican
+            excludeLabel.font=FontAmerican
+            cusineLabel.font=FontAmerican
+            intoleranceLabel.font=FontAmerican
+            dietLabel.font=FontAmerican
+            typeLabel.font=FontAmerican
+            queryLabel.font=FontAmerican
+            caloriesLabel.font=FontAmerican
+            proteinLabel.font=FontAmerican
+            carbsLabel.font=FontAmerican
+            fatLabel.font=FontAmerican
+            
+        }
         let placeHolderColor:UIColor=UIColor(red:255.0,green:255.0,blue:255.0, alpha:0.5)
         excludeTextField.attributedPlaceholder = NSAttributedString(string:"ex: peanut",
                                                                    attributes:[NSForegroundColorAttributeName: placeHolderColor])

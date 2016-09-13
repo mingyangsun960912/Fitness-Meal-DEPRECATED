@@ -8,6 +8,10 @@
 
 import UIKit
 import Alamofire
+import SDWebImage
+
+
+
 
 class RecipeListViewController: UIViewController, UITableViewDelegate{
     @IBOutlet weak var RecipeTableView: UITableView!
@@ -18,6 +22,7 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
     var progressFinish:Bool=false
     var retreveFinish:Bool=false
  
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     @IBOutlet weak var noResultsView: UIView!
     var noResults:Bool=false
@@ -61,72 +66,48 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
         self.RecipeTableView.dataSource = self
         noResultsView.hidden=true
         RecipeTableView.hidden=true
+       activityIndicator.startAnimating()
         self.getAllResults()
-        progressView = KDCircularProgress(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
-        progressView!.startAngle = -90
-        progressView!.progressThickness = 0.1
-        progressView!.trackThickness = 0.3
-        progressView!.clockwise = true
-        progressView!.center = view.center
-        progressView!.roundedCorners = true
-        progressView!.glowMode = .Constant
-        progressView!.setColors(UIColor.whiteColor())
-        progressView!.angle = 300
-        let screenSize:CGRect=UIScreen.mainScreen().bounds
-        
-        var loadingLabel = UILabel(frame: CGRectMake((progressView!.bounds.width - 150) / 2, (progressView!.bounds.height - 25) / 2, 150, 25))
-        loadingLabel.textAlignment=NSTextAlignment.Center
-        loadingLabel.text="Loading..."
-        loadingLabel.font=UIFont(name:"Times New Roman-Bold",size:22)
+//        progressView = KDCircularProgress(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+//        progressView!.startAngle = -90
+//        progressView!.progressThickness = 0.1
+//        progressView!.trackThickness = 0.3
+//        progressView!.clockwise = true
+//        progressView!.center = view.center
+//        progressView!.roundedCorners = true
+//        progressView!.glowMode = .Constant
+//        progressView!.setColors(UIColor.whiteColor())
+//        progressView!.angle = 300
+//        let screenSize:CGRect=UIScreen.mainScreen().bounds
+//        
+//        var loadingLabel = UILabel(frame: CGRectMake((progressView!.bounds.width - 150) / 2, (progressView!.bounds.height - 25) / 2, 150, 25))
+//        loadingLabel.textAlignment=NSTextAlignment.Center
+//        loadingLabel.text="Loading..."
+//        loadingLabel.font=UIFont(name:"Times New Roman-Bold",size:22)
     
 //        loadingLabel.center=progressView!.center
        
-        progressView!.addSubview(loadingLabel)
-        view.addSubview(progressView!)
-        progressView!.animateFromAngle(0, toAngle: 360, duration: 13) { completed in
-            if completed {
-                self.progressFinish=true
-                if(self.retreveFinish==true){
-                    self.progressView?.hidden=true
-                    self.RecipeTableView.hidden=false
-                    self.noResultsView.hidden=true
-                }else{
-                    loadingLabel.text="Be patient..."
-                    self.progressView?.hidden=false
-                    self.RecipeTableView.hidden=true
-                    self.noResultsView.hidden=true
-                }
-            } else {
-                self.progressFinish=false
-            }
-        }
-        
-//        progressView!.animateFromAngle(0, toAngle: 360, duration: 15) { completed in
-//          
+//        progressView!.addSubview(loadingLabel)
+//        view.addSubview(progressView!)
+//        progressView!.animateFromAngle(0, toAngle: 360, duration: 13) { completed in
 //            if completed {
-//                if(self.resultRetrieve==true){
+//                self.progressFinish=true
+//                if(self.retreveFinish==true){
+//                    self.progressView?.hidden=true
 //                    self.RecipeTableView.hidden=false
-//                    self.progressView!.hidden=true}
-//                else{
-////                    if(self.noResults==true){
-////                        self.noResultsView.hidden=false
-////                        self.RecipeTableView.hidden=true
-////                        self.progressView!.hidden=true}
-////                    else{
-////                        self.progressView!.hidden=false
-////                    }
+//                    self.noResultsView.hidden=true
+//                }else{
+//                    loadingLabel.text="Be patient..."
+//                    self.progressView?.hidden=false
+//                    self.RecipeTableView.hidden=true
+//                    self.noResultsView.hidden=true
 //                }
 //            } else {
-//                self.RecipeTableView.hidden=true
+//                self.progressFinish=false
 //            }
 //        }
+        
 
-
-//        self.RecipeTableView.delegate = self
-//        self.RecipeTableView.dataSource = self
-//              noResultsView.hidden=true
-//        getAllResults()
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -204,7 +185,7 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
                 if (self.results!.isEmpty){
                     self.noResultsView.hidden=false
                     self.RecipeTableView.hidden=true
-                    self.progressView!.hidden=true
+//                    self.progressView!.hidden=true
                     return
                 }
                 for recipeResultDic in self.results!{
@@ -238,15 +219,17 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
                                     self.resultRetrieve=true
                                     self.RecipeTableView.reloadData()
                                     self.retreveFinish=true
-                                    if(self.progressFinish==false){
-                                        self.progressView!.hidden=false
-                                        self.RecipeTableView.hidden=true
-                                        self.noResultsView.hidden=true}
-                                    else{
-                                        self.progressView?.hidden=true
-                                        self.RecipeTableView.hidden=false
-                                        self.noResultsView.hidden=true
-                                    }
+                                    self.activityIndicator.stopAnimating()
+                                    self.RecipeTableView!.hidden=false
+//                                    if(self.progressFinish==false){
+//                                        self.progressView!.hidden=false
+//                                        self.RecipeTableView.hidden=true
+//                                        self.noResultsView.hidden=true}
+//                                    else{
+//                                        self.progressView?.hidden=true
+//                                        self.RecipeTableView.hidden=false
+//                                        self.noResultsView.hidden=true
+//                                    }
                                     
                                 }
                             }
@@ -309,14 +292,14 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
 
                 firstVC.image = self.image
                 firstVC.imageurl=self.imageURL
-                firstVC.titleForRecipe=self.titleOfRecipe
-                firstVC.fat=self.fatResult
-                firstVC.carbs=self.carbsResult
-                firstVC.calories=self.caloriesResult
-                firstVC.protein=self.proteinResult
-                firstVC.servings=self.servings
-                firstVC.readyTime=self.readyTime
-                firstVC.idOfRecipe=self.idOfRecipe
+                firstVC.titleForRecipe=self.titleOfRecipe!
+                firstVC.fat=self.fatResult!
+                firstVC.carbs=self.carbsResult!
+                firstVC.calories=self.caloriesResult!
+                firstVC.protein=self.proteinResult!
+                firstVC.servings=self.servings!
+                firstVC.readyTime=self.readyTime!
+                firstVC.idOfRecipe=self.idOfRecipe!
                 
                  let secondVC=destination.viewControllers![1] as! DisplayIngredientsViewController
                 secondVC.missedIngredientsCount=self.missedIngredientsCount
@@ -344,7 +327,7 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)  as! RecipeListViewCellTableViewCell
         self.image = cell.recipePicImageView?.image
-        self.titleOfRecipe=cell.recipeTitleTextView?.text
+        self.titleOfRecipe=cell.recipeTitleLabel?.text
         self.caloriesResult=cell.caloriesLabel?.text
         self.carbsResult=cell.carbsLabel?.text
         self.fatResult=cell.fatLabel?.text
@@ -375,28 +358,30 @@ extension RecipeListViewController:UITableViewDataSource{
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell=tableView.dequeueReusableCellWithIdentifier("RecipeListCell") as! RecipeListViewCellTableViewCell
-        let cellBackgroundColor=UIColor(red:238.0,green:238.0, blue: 238.0, alpha: 1)
+        let cellBackgroundColor=UIColor(red:251.0/255,green:251.0/255, blue: 251.0/255, alpha: 1)
         cell.contentView.backgroundColor=cellBackgroundColor
         cell.recipePicImageView.image=nil
         let row=indexPath.row
         let recipeSum=recipeList[row]
-        cell.recipeTitleTextView.font = UIFont.boldSystemFontOfSize(22)
-        cell.recipeTitleTextView.text=recipeSum.title
-        
+        cell.recipeTitleTextView.hidden=true
+        cell.recipeTitleLabel.backgroundColor=UIColor(red:251.0/255,green:251.0/255, blue: 251.0/255, alpha: 1)
+        cell.recipeTitleLabel.text=recipeSum.title
+        cell.recipeTitleLabel.textColor=UIColor(red:90.0/255,green:87.0/255, blue: 83.0/255, alpha: 1)
+        cell.carbsLabel.textColor=UIColor(red:90.0/255,green:87.0/255, blue: 83.0/255, alpha: 1)
+        cell.caloriesLabel.textColor=UIColor(red:90.0/255,green:87.0/255, blue: 83.0/255, alpha: 1)
+        cell.fatLabel.textColor=UIColor(red:90.0/255,green:87.0/255, blue: 83.0/255, alpha: 1)
+        cell.proteinLabel.textColor=UIColor(red:90.0/255,green:87.0/255, blue: 83.0/255, alpha: 1)
         cell.caloriesLabel.text="Cal: "+recipeSum.calories+"Cal"
         cell.fatLabel.text="Fat: "+recipeSum.fat
-        cell.proteinLabel.text="Protein: "+recipeSum.protein
+        cell.proteinLabel.text="Ptein: "+recipeSum.protein
         cell.carbsLabel.text="Carbs: "+recipeSum.carbs
         cell.servings=recipeSum.servings
         cell.readyMinutes=recipeSum.readyMinutes
         cell.missedIngredientsCount=recipeSum.missedIngredientsCount!
         cell.imageURL=recipeSum.image
         cell.idOfRecipe=recipeSum.id
-      
-        imageDownloadHelper.sharedLoader.imageForUrl(recipeSum.image, completionHandler:{(image: UIImage?, url: String) in
-        
-            cell.recipePicImageView.image = image
-        })
+        cell.recipePicImageView.sd_setImageWithURL(NSURL(string: recipeSum.image),placeholderImage:nil)
+
      
         return cell
     }

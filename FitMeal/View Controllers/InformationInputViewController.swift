@@ -76,9 +76,23 @@ class InformationInputViewController: UIViewController {
         weightTextField.attributedPlaceholder = NSAttributedString(string:"0.0 lbs",
                                                                    attributes:[NSForegroundColorAttributeName: placeHolderColor])
         let attr = NSDictionary(object: UIFont(name: "American Typewriter", size: 13.0)!, forKey: NSFontAttributeName)
+
+        
+        if(UIScreen.mainScreen().bounds.height<=568.0){
+              let attr = NSDictionary(object: UIFont(name: "American Typewriter", size: 10.0)!, forKey: NSFontAttributeName)
+            statusSelector.setTitleTextAttributes(attr as [NSObject : AnyObject] , forState: .Normal)
+            modeSelector.setTitleTextAttributes(attr as [NSObject : AnyObject] , forState: .Normal)
+            activeSelector.setTitleTextAttributes(attr as [NSObject : AnyObject] , forState: .Normal)
+            let Font=UIFont(name:"American Typewriter", size:13.0)
+            tipsButton.titleLabel!.font=Font
+            let FontChalk=UIFont(name:"Chalkboard SE",size:15.0)
+            cookButton.titleLabel!.font=FontChalk
+            restaurantButton.titleLabel!.font=FontChalk
+
+        }else{
         statusSelector.setTitleTextAttributes(attr as [NSObject : AnyObject] , forState: .Normal)
         modeSelector.setTitleTextAttributes(attr as [NSObject : AnyObject] , forState: .Normal)
-        activeSelector.setTitleTextAttributes(attr as [NSObject : AnyObject] , forState: .Normal)
+            activeSelector.setTitleTextAttributes(attr as [NSObject : AnyObject] , forState: .Normal)}
         self.tipsButton.layer.borderWidth=1
             self.tipsButton.layer.borderColor=UIColor.whiteColor().CGColor
         self.tipsButton.layer.cornerRadius=6
@@ -95,6 +109,9 @@ class InformationInputViewController: UIViewController {
         self.view.backgroundColor=UIColor(red:220.0,green:220.0,blue:220.0,alpha:1.0)
         self.scrollView.backgroundColor=UIColor(red:220.0,green:220.0,blue:220.0,alpha:1.0)
         self.frontView.backgroundColor=UIColor(red:220.0,green:220.0,blue:220.0,alpha:1.0)
+        
+       
+        
         
         InformationInputViewController.likeIDs=RealmHelperClass.retrieveLikeIDObject()
         InformationInputViewController.dislikeIDs=RealmHelperClass.retrieveDislikeIDObject()

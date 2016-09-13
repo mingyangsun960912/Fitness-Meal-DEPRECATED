@@ -23,7 +23,7 @@ class FavoriteRecipeViewController: UIViewController,UICollectionViewDelegate, U
         collectionView.delegate=self
         collectionView.dataSource=self
         searchBar.delegate=self
-                if(FavoriteRecipeViewController.favorites.count==0){
+        if(FavoriteRecipeViewController.favorites.count==0){
             noResultView.hidden=false
             collectionView.hidden=true
             searchBar.hidden=false
@@ -32,11 +32,11 @@ class FavoriteRecipeViewController: UIViewController,UICollectionViewDelegate, U
             collectionView.hidden=false
             searchBar.hidden=false
         }
+        
         // Do any additional setup after loading the view.
     }
     override func viewWillAppear(animated: Bool) {
-         
-        self.collectionView.reloadData()
+     self.collectionView.reloadData()
        
     }
     override func didReceiveMemoryWarning() {
@@ -79,20 +79,51 @@ class FavoriteRecipeViewController: UIViewController,UICollectionViewDelegate, U
             let indexPaths=collectionView.indexPathsForSelectedItems()
             let indexPath=indexPaths![0]
             let item:FavoriteRecipeObject?
+            
             if(searchActive && searchBar.text != "") {
              item=filtered[indexPath.row]
+             
             }else{
              item=FavoriteRecipeViewController.favorites[indexPath.row]
         }
             destination.favoriteRecipe=item
+            destination.idOfRecipe=item!.id
+            destination.titleOfRecipe=item!.title
+            destination.image=item!.image
+            destination.ingredients=item!.ingredients
+            destination.steps=item!.steps
+            destination.fat=item!.fat
+            destination.protein=item!.protein
+            destination.calories=item!.calories
+            destination.carbs=item!.carbs
+            destination.servings=item!.servings
+            destination.readyInTime=item!.readyInTime
+            destination.sugar=item!.sugar
+            destination.fiber=item!.fiber
+            destination.saturatedFat=item!.saturatedFat
+            
+            destination.sodium=item!.sodium
+            destination.cholesterol=item!.cholesterol
+            destination.calcium=item!.calcium
+            destination.iron=item!.iron
+            destination.zinc=item!.zinc
+            
+            destination.potassium=item!.potassium
+            destination.vitaminA=item!.vitaminA
+            destination.vitaminC=item!.vitaminC
+            destination.vitaminB1=item!.vitaminB1
+            destination.vitaminB6=item!.vitaminB6
+            destination.vitaminE=item!.vitaminE
+            destination.vitaminK=item!.vitaminK
+
+
            
             
         }
         
     }
     @IBAction func unwindToFavoriteCollectionViewController(segue: UIStoryboardSegue){
-        self.collectionView.reloadData()
-    }
+            }
   
     /*
     // MARK: - Navigation
@@ -120,17 +151,12 @@ extension FavoriteRecipeViewController:UICollectionViewDataSource{
         let cell=collectionView.dequeueReusableCellWithReuseIdentifier("FavoriteRecipeCell", forIndexPath: indexPath) as! FavoriteRecipeCollectionViewCell
         if(searchActive && searchBar.text != ""){
             let imageUrl=filtered[indexPath.row].image
-            imageDownloadHelper.sharedLoader.imageForUrl(imageUrl, completionHandler:{(image: UIImage?, url: String) in
-                
-                cell.recipeImage.image=image
-               
-            })
+            cell.recipeImage.sd_setImageWithURL(NSURL(string:imageUrl),placeholderImage:nil)
+
            
         } else {
             let imageUrl=FavoriteRecipeViewController.favorites[indexPath.row].image
-            imageDownloadHelper.sharedLoader.imageForUrl(imageUrl, completionHandler:{(image: UIImage?, url: String) in
-                cell.recipeImage.image=image
-            })
+            cell.recipeImage.sd_setImageWithURL(NSURL(string:imageUrl),placeholderImage:nil)
 
           
         }

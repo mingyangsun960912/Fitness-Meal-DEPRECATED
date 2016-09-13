@@ -113,7 +113,9 @@ extension ShoppingListViewController:UITableViewDataSource{
         if(ShoppingListViewController.shoppingItems.count != 0){
                 cell.viewController=self
                 let row=indexPath.row
+   
                 let item=ShoppingListViewController.shoppingItems[row]
+          
                 cell.item=item
                 cell.itemLabel.text=item.name
                 cell.checkButton.selected=item.finish
@@ -126,15 +128,21 @@ extension ShoppingListViewController:UITableViewDataSource{
      func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         // 2
         if editingStyle == .Delete {
+            
             // 3
             RealmHelperClass.deleteShoppingListItem(ShoppingListViewController.shoppingItems[indexPath.row])
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
+            ShoppingListViewController.shoppingItems=RealmHelperClass.retrieveShoppingListItems()
+
+             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
+           
             // 4
             if(ShoppingListViewController.shoppingItems.count==0){
                 noResultUIView.hidden=false
                 tableView.hidden=true
+            }else{
+                tableView.reloadData()
             }
-            tableView.reloadData()
+
         }
     }
 

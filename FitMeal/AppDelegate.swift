@@ -16,6 +16,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        UINavigationBar.appearance().barTintColor = UIColor.whiteColor()
+        UINavigationBar.appearance().tintColor = UIColor.blackColor()
+        let fontForBar:UIFont=UIFont(name: "Helvetica", size: 13)!
+        let textColor:UIColor=UIColor(red:255.0/255,green:99.0/255, blue: 130.0/255, alpha: 1)
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : textColor, NSFontAttributeName: UIFont(name: "Cochin-Bold", size: 19)!]
+        UIBarButtonItem.appearance()
+            .setTitleTextAttributes([NSFontAttributeName : fontForBar],
+                                    forState: UIControlState.Normal)
+        ShoppingListViewController.shoppingItems=RealmHelperClass.retrieveShoppingListItems()
+
         return true
     }
 

@@ -13,8 +13,9 @@ import AlamofireImage
 class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     var idOfRecipe:Int?
-    var chosenRecipeId:Int?
+    var chosenRecipeId:Int=0
     let head: [String: String] = [
         "X-Mashape-Key": "1C9TO0ENkpmsho9kJK5xKzEcSdJAp1XiAgsjsn5TythzmyNqSb",
       
@@ -30,6 +31,8 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
        self.tableView.delegate=self
         self.tableView.dataSource=self
         //getSimilarRecipes(idOfRecipe!)
+        self.tableView.hidden=true
+        activityIndicator.startAnimating()
         getSimilarRecipes(idOfRecipe!)
 
         // Do any additional setup after loading the view.
@@ -83,6 +86,8 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
                             dispatch_async(dispatch_get_main_queue()) {
 //                                self.RecipeTableView.reloadData()
                                 self.tableView.reloadData()
+                                self.activityIndicator.stopAnimating()
+                                self.tableView.hidden=false
                             }
                         }
                     })
@@ -99,9 +104,10 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
         if(segue.identifier=="toIndividualRecipe"){
             let destination=segue.destinationViewController as! SimilarIndividualRecipeViewController
           
-            destination.idOfRecipe=self.chosenRecipeId!
+            destination.idOfRecipe=self.chosenRecipeId
             destination.imageurl=self.selectedImageURL
             destination.titleOfRecipe=self.titleOfRecipe!
+            destination.image=self.selectedImage
             
         }
     }
@@ -129,7 +135,6 @@ class DisplaySimilarRecipesViewController: UIViewController,UITableViewDelegate 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)  as! SimilarRecipeTableViewCell
         self.chosenRecipeId = cell.idOfRecipe
-       
         self.selectedImage=cell.similarRecipeImageView.image
         self.titleOfRecipe=cell.recipeNameLabel.text
         self.selectedImageURL=cell.imageUrl
@@ -164,13 +169,10 @@ extension DisplaySimilarRecipesViewController:UITableViewDataSource{
         let cellObject = similarRecipes[indexPath.row]
         cell.idOfRecipe=cellObject.id
         cell.imageUrl=cellObject.imageURL
- 
-        imageDownloadHelper.sharedLoader.imageForUrl(cellObject.imageURL, completionHandler:{(image: UIImage?, url: String) in
-            cell.similarRecipeImageView.image=image
-            cell.recipeNameLabel.text=cellObject.title
-            cell.recipeNameLabel.hidden=false
-            //+"\n"+"Cooking Time: "+String(cellObject.readyInMinutes)+" minutes"
-        })
+        cell.similarRecipeImageView.sd_setImageWithURL(NSURL(string:cellObject.imageURL),placeholderImage:nil)
+        cell.recipeNameLabel.text=cellObject.title
+        cell.recipeNameLabel.hidden=false
+
        
         return cell
     }

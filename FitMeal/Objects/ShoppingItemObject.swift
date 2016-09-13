@@ -16,5 +16,5 @@ class ShoppingItemObject: Object {
     dynamic var note:String=""
     dynamic var priceEst:String=""
     dynamic var finish:Bool=false
-    
+    dynamic var order:Int=0
 }

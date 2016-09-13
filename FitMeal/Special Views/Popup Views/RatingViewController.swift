@@ -59,6 +59,8 @@ class RatingViewController: UIViewController {
         updatedShoppingItemObject.unit=unitTextField.text!
         updatedShoppingItemObject.priceEst=priceEstTextField.text!
         updatedShoppingItemObject.note=noteTextView.text!
+        updatedShoppingItemObject.order=ShoppingListViewController.shoppingItems.count
+        
         return updatedShoppingItemObject
     }
    

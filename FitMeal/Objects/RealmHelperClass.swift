@@ -36,7 +36,7 @@ class RealmHelperClass {
             realm.add(DislikeID)
         }
     }
-    static func deleteFavoriteRecipe(favoriteRecipe: FavoriteRecipeObject) {
+    static func deleteFavoriteRecipe(favoriteRecipe: Results<FavoriteRecipeObject>) {
         let realm = try! Realm()
         try! realm.write() {
             realm.delete(favoriteRecipe)
@@ -69,6 +69,8 @@ class RealmHelperClass {
             shoppingListItemToBeUpdated.unit=newShoppingListItem.unit
             shoppingListItemToBeUpdated.priceEst=newShoppingListItem.priceEst
             shoppingListItemToBeUpdated.finish=newShoppingListItem.finish
+            shoppingListItemToBeUpdated.order=newShoppingListItem.order
+         
             
         }
     }
@@ -82,7 +84,7 @@ class RealmHelperClass {
     }
     static func retrieveShoppingListItems() -> Results<ShoppingItemObject> {
         let realm = try! Realm()
-        return realm.objects(ShoppingItemObject)
+        return realm.objects(ShoppingItemObject).sorted("order", ascending: false)
     }
     static func retrieveFavoriteRecipes() -> Results<FavoriteRecipeObject> {
         let realm = try! Realm()

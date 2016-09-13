@@ -11,6 +11,7 @@ import UIKit
 class RecipeListViewCellTableViewCell: UITableViewCell {
     @IBOutlet weak var recipePicImageView: UIImageView!
     
+    @IBOutlet weak var recipeTitleLabel: UILabel!
     @IBOutlet weak var recipeTitleTextView: UITextView!
     @IBOutlet weak var caloriesLabel: UILabel!
     @IBOutlet weak var carbsLabel: UILabel!
@@ -30,12 +31,18 @@ class RecipeListViewCellTableViewCell: UITableViewCell {
         
         self.recipeTitleTextView.scrollRangeToVisible(NSMakeRange(0, 0))
         
-        self.recipePicImageView.layer.borderWidth=2
+        self.recipePicImageView.layer.borderWidth=3
         self.recipePicImageView.layer.borderColor=UIColor.whiteColor().CGColor
-           self.recipePicImageView.layer.shadowOffset = CGSize(width: 3, height: 3)
-            self.recipePicImageView.layer.shadowOpacity = 0.7
-            self.recipePicImageView.layer.shadowRadius = 2
-            
+//           self.recipePicImageView.layer.shadowOffset = CGSize(width: 3, height: 3)
+//            self.recipePicImageView.layer.shadowOpacity = 0.7
+//            self.recipePicImageView.layer.shadowRadius = 2
+            if(UIScreen.mainScreen().bounds.height<=568){
+            let fontOfLabel=UIFont(name:"Palatino",size:12.0)
+            carbsLabel.font=fontOfLabel
+            caloriesLabel.font=fontOfLabel
+            fatLabel.font=fontOfLabel
+            proteinLabel.font=fontOfLabel
+            }
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

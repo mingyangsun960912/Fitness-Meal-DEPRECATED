@@ -95,8 +95,8 @@ class DisplayIngredientsViewController: UIViewController, UITableViewDelegate {
             newAddingItem.priceEst=""
             newAddingItem.note=""
             newAddingItem.finish=false
-//            
-//            let newAddingItem=ShoppingItemObject(name:eachItem,number:"",unit:"",priceEst:"",note:"")
+            newAddingItem.order=ShoppingListViewController.shoppingItems.count
+
             RealmHelperClass.addShoppingListItem(newAddingItem)
             ShoppingListViewController.shoppingItems=RealmHelperClass.retrieveShoppingListItems()
         }
@@ -127,21 +127,16 @@ extension DisplayIngredientsViewController:UITableViewDataSource{
         let row=indexPath.row
         let imageURLOne=imageArray[row*2]
         let ingredientDescriptionOne=originalStringArray[row*2]
-        imageDownloadHelper.sharedLoader.imageForUrl(imageURLOne, completionHandler:{(image: UIImage?, url: String) in
+        cell.ingredientImageViewOne.sd_setImageWithURL(NSURL(string: imageURLOne),placeholderImage:nil)
+        cell.descriptionTextViewOne.text=ingredientDescriptionOne
 
-            cell.ingredientImageViewOne.image=image
-            cell.descriptionTextViewOne.text=ingredientDescriptionOne
-                   })
         if(row*2+1<=imageArray.count-1){
         let imageURLTwo = imageArray[row*2+1]
         if imageURLTwo != "" {
             let ingredientDescriptionTwo=originalStringArray[row*2+1]
-            imageDownloadHelper.sharedLoader.imageForUrl(imageURLTwo, completionHandler:{(image: UIImage?, url: String) in
-      
-             cell.ingredientImageViewTwo.image=image
-                cell.descriptionTextViewTwo.text=ingredientDescriptionTwo
-               
-            })
+            cell.ingredientImageViewTwo.sd_setImageWithURL(NSURL(string: imageURLTwo),placeholderImage:nil)
+            cell.descriptionTextViewTwo.text=ingredientDescriptionTwo
+
         }
         }
         return cell

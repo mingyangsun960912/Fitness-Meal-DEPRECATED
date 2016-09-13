@@ -9,5 +9,6 @@ target 'FitMeal' do
      pod 'RealmSwift' 
      pod 'AlamofireImage'
      pod 'KDCircularProgress'
+     pod 'SDWebImage', '~>3.8'
  pod 'PopupDialog', '~> 0.3'
 end

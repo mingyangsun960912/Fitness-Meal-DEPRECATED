@@ -11,7 +11,10 @@ import Alamofire
 import RealmSwift
 class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelegate
 {
+    @IBOutlet weak var mainView: UIView!
     
+    @IBOutlet var behindView: UIView!
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var trashButton: UIButton!
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var infoSegmentedControl: UISegmentedControl!
@@ -20,18 +23,47 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
     @IBOutlet weak var summaryView: UIView!
 //MARK:summaryView Labels
     
+    @IBOutlet weak var calLabel: UILabel!
     @IBOutlet weak var readyInTimeLabel: UILabel!
     @IBOutlet weak var servingLabel: UILabel!
-    @IBOutlet weak var caloriesLabel: UILabel!
+//MARK: Nutrients
     @IBOutlet weak var carbsLabel: UILabel!
     @IBOutlet weak var proteinLabel: UILabel!
+    
+    @IBOutlet weak var sugarLabel: UILabel!
+    @IBOutlet weak var fiberLabel: UILabel!
     @IBOutlet weak var fatLabel: UILabel!
+    @IBOutlet weak var saturatedLabel: UILabel!
+    
+    @IBOutlet weak var sodiumLabel: UILabel!
+    @IBOutlet weak var choLabel: UILabel!
+    
+    @IBOutlet weak var calciumLabel: UILabel!
+    @IBOutlet weak var ironLabel: UILabel!
+
+    @IBOutlet weak var zincLabel: UILabel!
+    @IBOutlet weak var potassiumLabel: UILabel!
+    @IBOutlet weak var vitaminALabel: UILabel!
+
+    @IBOutlet weak var vitaminCLabel: UILabel!
+
+    @IBOutlet weak var vitaminBOneLabel: UILabel!
+    @IBOutlet weak var vitaminBSixLabel: UILabel!
+    @IBOutlet weak var vitaminELabel: UILabel!
+
+    @IBOutlet weak var vitaminKLabel: UILabel!
+
+    @IBOutlet weak var totalAmountLabel: UILabel!
+
+
+    @IBOutlet weak var basicStackView: UIStackView!
+    @IBOutlet weak var shadowView: UIView!
     
     @IBOutlet weak var ingredientTableView: UITableView!
     @IBOutlet weak var stepTableView: UITableView!
-    var idOfRecipe:Int?
+    var idOfRecipe:Int=0
     var image:UIImage?
-    var imageurl:String?
+    var imageurl:String=""
     var nameArray:[String]=[]
     var imageArray:[String]=[]
     var numberStringArray:[String]=[]
@@ -40,12 +72,27 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
      var cellObjects:[StepCellObject]=[]
       var stepsResult:[String]=[]
     var titleOfRecipe:String=""
-    var servings:Int?
-    var readyMinutes:Int?
-    var fat:String?
-    var calories:String?
-    var carbs:String?
-    var protein:String?
+    var servings:Int=0
+    var readyMinutes:Int=0
+    var fat:String=""
+    var calories:String=""
+    var carbs:String=""
+    var protein:String=""
+    var sugar:String=""
+    var fiber:String=""
+    var saturatedFat:String=""
+    var sodium:String=""
+    var chole:String=""
+    var calcium:String=""
+    var iron:String=""
+    var zinc:String=""
+    var potassium:String=""
+    var vitaminA:String=""
+    var vitaminC:String=""
+    var vitaminBOne:String=""
+    var vitaiminBSix:String=""
+    var vitaminE:String=""
+    var vitaminK:String=""
     let head: [String: String] = [
         "X-Mashape-Key": "1C9TO0ENkpmsho9kJK5xKzEcSdJAp1XiAgsjsn5TythzmyNqSb",
         ]
@@ -53,21 +100,82 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
     var returnToLast:Bool=false
     override func viewDidLoad() {
         super.viewDidLoad()
-        if(InformationInputViewController.likeIDsList.contains(idOfRecipe!)){
+        self.shadowView.layer.shadowOffset=CGSize(width:2, height: 3)
+        self.shadowView.layer.shadowOpacity=0.8
+        calLabel.text=""
+        proteinLabel.text=""
+        servingLabel.text=""
+        readyInTimeLabel.text=""
+        carbsLabel.text=""
+        sugarLabel.text=""
+        fiberLabel.text=""
+        fatLabel.text=""
+        saturatedLabel.text=""
+        sodiumLabel.text=""
+        choLabel.text=""
+        calciumLabel.text=""
+        ironLabel.text=""
+        zincLabel.text=""
+        potassiumLabel.text=""
+        vitaminALabel.text=""
+        vitaminBOneLabel.text=""
+        vitaminCLabel.text=""
+        vitaminBSixLabel.text=""
+        vitaminELabel.text=""
+        vitaminKLabel.text=""
+        if(UIScreen.mainScreen().bounds.height==568){
+            let fontForLabel=UIFont(name:"Gill Sans",size:15.0)
+            readyInTimeLabel.font=fontForLabel
+            servingLabel.font=fontForLabel
+            calLabel.font=fontForLabel
+            let font=UIFont(name:"Times New Roman",size:15.0)
+            proteinLabel.font=font
+            carbsLabel.font=font
+            fatLabel.font=font
+            saturatedLabel.font=font
+            sugarLabel.font=font
+            fiberLabel.font=font
+            sodiumLabel.font=font
+            choLabel.font=font
+            calciumLabel.font=font
+            ironLabel.font=font
+            zincLabel.font=font
+            potassiumLabel.font=font
+            vitaminALabel.font=font
+            vitaminBOneLabel.font=font
+            vitaminCLabel.font=font
+            vitaminBSixLabel.font=font
+            vitaminELabel.font=font
+            vitaminKLabel.font=font
+            
+
+}
+        let greyColor:UIColor=UIColor(red:220.0/255,green:220.0/255,blue:220.0/255,alpha:1)
+        self.carbsLabel.backgroundColor=greyColor
+        self.proteinLabel.backgroundColor=greyColor
+        self.fatLabel.backgroundColor=greyColor
+        self.saturatedLabel.backgroundColor=greyColor
+        self.calciumLabel.backgroundColor=greyColor
+        self.ironLabel.backgroundColor=greyColor
+        self.vitaminALabel.backgroundColor=greyColor
+        self.vitaminCLabel.backgroundColor=greyColor
+        self.vitaminELabel.backgroundColor=greyColor
+        self.vitaminKLabel.backgroundColor=greyColor
+        self.shadowView.layer.shadowColor=UIColor.grayColor().CGColor
+        totalAmountLabel.textColor=UIColor(red:80.0/255,green:83.0/255,blue:61.0/255,alpha:1)
+        let attr = NSDictionary(object: UIFont(name: "American Typewriter", size: 13.0)!, forKey: NSFontAttributeName)
+        infoSegmentedControl.setTitleTextAttributes(attr as [NSObject : AnyObject] , forState: .Normal)
+        if(InformationInputViewController.likeIDsList.contains(idOfRecipe)){
             likeButton.selected=true
         }else{
             likeButton.selected=false
         }
-        if(InformationInputViewController.dislikeIDsList.contains(idOfRecipe!)){
+        if(InformationInputViewController.dislikeIDsList.contains(idOfRecipe)){
             trashButton.selected=true
         }else{
             trashButton.selected=false
         }
-//        if(FavoriteRecipeViewController.likeID.contains(idOfRecipe!)){
-//            likeButton.selected=true
-//        }else{
-//            likeButton.selected=false
-//        }
+
         titleLabel.text=titleOfRecipe
         self.RecipeImageVIew.image=image
      self.ingredientTableView.dataSource=self
@@ -80,12 +188,8 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
     }
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-        caloriesLabel.text=""
-        proteinLabel.text=""
-        fatLabel.text=""
-        servingLabel.text=""
-        readyInTimeLabel.text=""
-        carbsLabel.text=""
+       
+        
         self.ingredientTableView.hidden=true
         self.stepTableView.hidden=true
     }
@@ -96,7 +200,7 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
     func showDifferentInfo(){
         switch infoSegmentedControl.selectedSegmentIndex{
         case 0:
-          
+        
             self.summaryView.hidden=false
             self.stepTableView.hidden=true
             self.ingredientTableView.hidden=true
@@ -142,42 +246,147 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
             case .Success(let value):
                 
                 //MARK: get basic informaiton
-            self.servings=value.objectForKey("servings") as? Int
-                self.readyMinutes=value.objectForKey("readyInMinutes") as? Int
-                let wholeNutritionDic=value.objectForKey("nutrition") as? NSDictionary
-                let nutritionsArray=wholeNutritionDic!["nutrients"] as? [NSDictionary]
+            self.servings=value.objectForKey("servings") as! Int
+                self.readyMinutes=value.objectForKey("readyInMinutes") as! Int
+                let wholeNutritionDic=value.objectForKey("nutrition") as! NSDictionary
+                let nutritionsArray=wholeNutritionDic["nutrients"] as! [NSDictionary]
                 let ingredientList=value.objectForKey("extendedIngredients") as! [NSDictionary]
-                for eachNutrtion in nutritionsArray!{
+                for eachNutrtion in nutritionsArray{
                     let theTitle=eachNutrtion["title"] as! String
                     if(theTitle == "Fat"){
                         let fatAmount=eachNutrtion["amount"] as! Double
                         let unit=eachNutrtion["unit"] as! String
-                        self.fat=String(fatAmount)+" \(unit)"
+                        self.fatLabel.text=" Fat: "+String(fatAmount)+" \(unit)"
+                        self.fat=" Fat: "+String(fatAmount)+" \(unit)"
                     }
                     if(theTitle == "Calories"){
                         let caloriesAmount=eachNutrtion["amount"] as! Double
                         let unit=eachNutrtion["unit"] as! String
-                        self.calories=String(caloriesAmount)+" \(unit)"
+                        self.calLabel.text="  "+String(caloriesAmount)+" Cal"
+                        self.calories="  "+String(caloriesAmount)+" Cal"
+                       
                     }
                     if(theTitle == "Carbohydrates"){
                         let CarbohydratesAmount=eachNutrtion["amount"] as! Double
                         let unit=eachNutrtion["unit"] as! String
-                        self.carbs=String(CarbohydratesAmount)+" \(unit)"
+                        self.carbsLabel.text=" Carbs: "+String(CarbohydratesAmount)+" \(unit)"
+                        self.carbs=" Carbs: "+String(CarbohydratesAmount)+" \(unit)"
                     }
                     if(theTitle == "Protein"){
                         let proteinAmount=eachNutrtion["amount"] as! Double
                         let unit=eachNutrtion["unit"] as! String
-                        self.protein=String(proteinAmount)+" \(unit)"
+                        self.proteinLabel.text=" Protein: "+String(proteinAmount)+" \(unit)"
+                        self.protein=" Protein: "+String(proteinAmount)+" \(unit)"
+                    }
+                    if(theTitle == "Saturated Fat"){
+                        let saturatedFatAmount=eachNutrtion["amount"] as! Double
+                        let unit=eachNutrtion["unit"] as! String
+                        self.saturatedLabel.text=" Saturated: "+String(saturatedFatAmount)+" \(unit)"
+                        self.saturatedFat=" Saturated: "+String(saturatedFatAmount)+" \(unit)"
+                    }
+                    
+                    if(theTitle == "Sugar"){
+                        let sugarAmount=eachNutrtion["amount"] as! Double
+                        let unit=eachNutrtion["unit"] as! String
+                        self.sugarLabel.text=" Sugar: "+String(sugarAmount)+" \(unit)"
+                        self.sugar=" Sugar: "+String(sugarAmount)+" \(unit)"
+                    }
+                    if(theTitle == "Cholesterol"){
+                        let choleAmount=eachNutrtion["amount"] as! Double
+                        let unit=eachNutrtion["unit"] as! String
+                        self.choLabel.text=" Cholesterol: "+String(choleAmount)+" \(unit)"
+                        self.chole=" Cholesterol: "+String(choleAmount)+" \(unit)"
+
+                    }
+                    if(theTitle == "Sodium"){
+                        let sodiumAmount=eachNutrtion["amount"] as! Double
+                        let unit=eachNutrtion["unit"] as! String
+                        self.sodiumLabel.text=" Sodium: "+String(sodiumAmount)+" \(unit)"
+                        self.sodium=" Sodium: "+String(sodiumAmount)+" \(unit)"
+
+                    }
+                    if(theTitle == "Vitamin K"){
+                        let vitaminKAmount=eachNutrtion["amount"] as! Double
+                        let unit=eachNutrtion["unit"] as! String
+                        self.vitaminKLabel.text=" Vitamin K: "+String(vitaminKAmount)+" \(unit)"
+                        self.vitaminK=" Vitamin K: "+String(vitaminKAmount)+" \(unit)"
+                    }
+                    
+                    if(theTitle == "Vitamin A"){
+                        let vitaminAAmount=eachNutrtion["amount"] as! Double
+                        let vitaminValidAmount=vitaminAAmount*0.3/1000
+                        let vitaminAFinalAmount=(round(100*vitaminValidAmount)/100)
+//                        let unit=eachNutrtion["unit"] as! String
+                        self.vitaminALabel.text=" Vitamin A: "+String(vitaminAFinalAmount)+" mg"
+                        self.vitaminA=" Vitamin A: "+String(vitaminAFinalAmount)+" mg"
+
+                    }
+                    if(theTitle == "Vitamin C"){
+                        let vitaminCAmount=eachNutrtion["amount"] as! Double
+                        let unit=eachNutrtion["unit"] as! String
+                        self.vitaminCLabel.text=" Vitamin C: "+String(vitaminCAmount)+" \(unit)"
+                        self.vitaminC=" Vitamin C: "+String(vitaminCAmount)+" \(unit)"
+                    }
+                    if(theTitle == "Zinc"){
+                        let zincAmount=eachNutrtion["amount"] as! Double
+                        let unit=eachNutrtion["unit"] as! String
+                        self.zincLabel.text=" Zinc: "+String(zincAmount)+" \(unit)"
+                        self.zinc=" Zinc: "+String(zincAmount)+" \(unit)"
+                    }
+                    
+                    if(theTitle == "Vitamin B6"){
+                        let vitaminBSixAmount=eachNutrtion["amount"] as! Double
+                        let unit=eachNutrtion["unit"] as! String
+                        self.vitaminBSixLabel.text=" Vitamin B6: "+String(vitaminBSixAmount)+" \(unit)"
+                        self.vitaiminBSix=" Vitamin B6: "+String(vitaminBSixAmount)+" \(unit)"
+
+                        
+                    }
+                    if(theTitle == "Iron"){
+                        let ironAmount=eachNutrtion["amount"] as! Double
+                        let unit=eachNutrtion["unit"] as! String
+                        self.ironLabel.text=" Iron: "+String(ironAmount)+" \(unit)"
+                        self.iron=" Iron: "+String(ironAmount)+" \(unit)"
+
+                    }
+                    if(theTitle == "Vitamin E"){
+                        let vitaminEAmount=eachNutrtion["amount"] as! Double
+                        let unit=eachNutrtion["unit"] as! String
+                        self.vitaminELabel.text=" Vitamin E: "+String(vitaminEAmount)+" \(unit)"
+                        self.vitaminE=" Vitamin E: "+String(vitaminEAmount)+" \(unit)"
+                    }
+                    if(theTitle == "Potassium"){
+                        let potassiumAmount=eachNutrtion["amount"] as! Double
+                        let unit=eachNutrtion["unit"] as! String
+                        self.potassiumLabel.text=" Potassium: "+String(potassiumAmount)+" \(unit)"
+                        self.potassium=" Potassium: "+String(potassiumAmount)+" \(unit)"
+
+                    }
+                    if(theTitle == "Vitamin B1"){
+                        let vitaminB1Amount=eachNutrtion["amount"] as! Double
+                        let unit=eachNutrtion["unit"] as! String
+                        self.vitaminBOneLabel.text=" Vitamin B1: "+String(vitaminB1Amount)+" \(unit)"
+                        self.vitaminBOne=" Vitamin B1: "+String(vitaminB1Amount)+" \(unit)"
+
+                    }
+                    if(theTitle == "Fiber"){
+                        let fiberAmount=eachNutrtion["amount"] as! Double
+                        let unit=eachNutrtion["unit"] as! String
+                        self.fiberLabel.text=" Fiber: "+String(fiberAmount)+" \(unit)"
+                        self.fiber=" Fiber: "+String(fiberAmount)+" \(unit)"
+                    }
+                    if(theTitle == "Calcium"){
+                        let calciumAmount=eachNutrtion["amount"] as! Double
+                        let unit=eachNutrtion["unit"] as! String
+                        self.calciumLabel.text=" Calcium: "+String(calciumAmount)+" \(unit)"
+                        self.calcium=" Calcium: "+String(calciumAmount)+" \(unit)"
+
                     }
                     
                 }
-            
-                self.caloriesLabel.text=self.calories!
-                self.fatLabel.text=self.fat!
-                self.proteinLabel.text=self.protein!
-                self.carbsLabel.text=self.carbs!
-                self.servingLabel.text=String(self.servings!)+" servings"
-                self.readyInTimeLabel.text=String(self.readyMinutes!) + " minutes"
+    
+                self.servingLabel.text="  "+String(self.servings)+" servings"
+                self.readyInTimeLabel.text="  "+String(self.readyMinutes) + " mins"
                 //MARK:Get Ingredients Informaiton
                 
                 for eachIngredient in ingredientList{
@@ -205,8 +414,8 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
     }
  
     func getSteps(completion:()->Void){
-        let parameters=["id":idOfRecipe!, "stepBreakdown":true]
-        Alamofire.request(.GET, "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/\(idOfRecipe!)/analyzedInstructions?stepBreakdown=true", parameters: parameters as? [String : AnyObject], encoding:ParameterEncoding.URL , headers: head) .responseJSON{ response in
+        let parameters=["id":idOfRecipe, "stepBreakdown":true]
+        Alamofire.request(.GET, "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/\(idOfRecipe)/analyzedInstructions?stepBreakdown=true", parameters: parameters as? [String : AnyObject], encoding:ParameterEncoding.URL , headers: head) .responseJSON{ response in
             switch response.result{
             case .Success(let value1):
                
@@ -288,10 +497,10 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
         let yesAction=UIAlertAction(title:"Yes", style:UIAlertActionStyle.Default, handler: { (action: UIAlertAction!) in
             self.trashButton.selected=true
             let newDislikeIDObject=DislikeIDObject()
-            newDislikeIDObject.dislikeID=self.idOfRecipe!
+            newDislikeIDObject.dislikeID=self.idOfRecipe
             RealmHelperClass.addDislikeID(newDislikeIDObject)
             InformationInputViewController.dislikeIDs=RealmHelperClass.retrieveDislikeIDObject()
-            InformationInputViewController.dislikeIDsList.append(self.idOfRecipe!)
+            InformationInputViewController.dislikeIDsList.append(self.idOfRecipe)
 //            FavoriteRecipeViewController.dislikeID.append(self.idOfRecipe!)
             self.performSegueWithIdentifier("toDisplaySimilarRecipesViewController", sender: self)
         })
@@ -304,41 +513,55 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
     }
     func likeFunction(){
         likeButton.selected=true
-//        FavoriteRecipeViewController.likeID.append(idOfRecipe!)
-//        let newLikeItem=FavoriteRecipeObject(title:titleOfRecipe, id:idOfRecipe!,image:image!,ingredients:originalStringArray, steps:stepsResult, fat:fat!, protein:protein!, calories:calories!, carbs:carbs!, servings:servings!, readyInTime:readyMinutes!)
-//        FavoriteRecipeViewController.favorites.append(newLikeItem)
+
         let newLikeItem=FavoriteRecipeObject()
         newLikeItem.title=titleOfRecipe
-        newLikeItem.id=idOfRecipe!
-        newLikeItem.image=imageurl!
+        newLikeItem.id=idOfRecipe
+        newLikeItem.image=imageurl
         let ingredientsString=originalStringArray.joinWithSeparator("||")
         newLikeItem.ingredients=ingredientsString
         let stepsString=stepsResult.joinWithSeparator("||")
         newLikeItem.steps=stepsString
-        newLikeItem.fat=fat!
-        newLikeItem.protein=protein!
-        newLikeItem.calories=calories!
-        newLikeItem.carbs=carbs!
-        newLikeItem.servings=servings!
-        newLikeItem.readyInTime=readyMinutes!
-        self.newLikeObject=newLikeItem
+        newLikeItem.fat=fat
+        newLikeItem.protein=protein
+        newLikeItem.calories=calories
+        newLikeItem.carbs=carbs
+        newLikeItem.servings=servings
+        newLikeItem.readyInTime=readyMinutes
+        newLikeItem.sugar=self.sugar
+        newLikeItem.saturatedFat=self.saturatedFat
+        newLikeItem.calcium=self.calcium
+        newLikeItem.cholesterol=self.chole
+        newLikeItem.zinc=self.zinc
+        newLikeItem.iron=self.iron
+        newLikeItem.sodium=self.sodium
+        newLikeItem.potassium=self.potassium
+        newLikeItem.vitaminE=self.vitaminE
+        newLikeItem.vitaminA=self.vitaminA
+        newLikeItem.vitaminC=self.vitaminC
+        newLikeItem.vitaminK=self.vitaminK
+        newLikeItem.vitaminB6=self.vitaiminBSix
+        newLikeItem.vitaminB1=self.vitaminBOne
+        newLikeItem.fiber=self.fiber
+        
         RealmHelperClass.addFavoriteRecipe(newLikeItem)
         FavoriteRecipeViewController.favorites=RealmHelperClass.retrieveFavoriteRecipes()
         let newlikeIDObject=LikeIDObject()
-        newlikeIDObject.likeID=self.idOfRecipe!
+        newlikeIDObject.likeID=self.idOfRecipe
         RealmHelperClass.addLikeID(newlikeIDObject)
         InformationInputViewController.likeIDs=RealmHelperClass.retrieveLikeIDObject()
-        InformationInputViewController.likeIDsList.append(self.idOfRecipe!)
+        InformationInputViewController.likeIDsList.append(self.idOfRecipe)
     }
     func unlikeFunction(){
         likeButton.selected=false
         let realm=try! Realm()
         let unlikeIDObject=realm.objects(LikeIDObject).filter("likeID=\(self.idOfRecipe)")
         RealmHelperClass.deleteLikeID(unlikeIDObject)
-        RealmHelperClass.deleteFavoriteRecipe(self.newLikeObject!)
+        let unlikeItem=realm.objects(FavoriteRecipeObject).filter("id=\(self.idOfRecipe)")
+        RealmHelperClass.deleteFavoriteRecipe(unlikeItem)
         InformationInputViewController.likeIDs = RealmHelperClass.retrieveLikeIDObject()
         FavoriteRecipeViewController.favorites=RealmHelperClass.retrieveFavoriteRecipes()
-        if let index=InformationInputViewController.likeIDsList.indexOf(idOfRecipe!){
+        if let index=InformationInputViewController.likeIDsList.indexOf(idOfRecipe){
             InformationInputViewController.likeIDsList.removeAtIndex(index)
         }
 //
@@ -356,7 +579,7 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
         let untrashIDObject = realm.objects(DislikeIDObject).filter("dislikeID=\(self.idOfRecipe)")
         RealmHelperClass.deleteDislikeID(untrashIDObject)
         InformationInputViewController.dislikeIDs=RealmHelperClass.retrieveDislikeIDObject()
-        if let index=InformationInputViewController.dislikeIDsList.indexOf(idOfRecipe!){
+        if let index=InformationInputViewController.dislikeIDsList.indexOf(idOfRecipe){
             InformationInputViewController.dislikeIDsList.removeAtIndex(index)
         }
 
@@ -406,20 +629,16 @@ extension SimilarIndividualRecipeViewController:UITableViewDataSource{
             let row=indexPath.row
             let imageURLOne=imageArray[row*2]
             let ingredientDescriptionOne=originalStringArray[row*2]
-            imageDownloadHelper.sharedLoader.imageForUrl(imageURLOne, completionHandler:{(image: UIImage?, url: String) in
-                
-                ingredientCell.imageViewOne.image=image
+            ingredientCell.imageViewOne.sd_setImageWithURL(NSURL(string:imageURLOne),placeholderImage:nil)
                 ingredientCell.textViewOne.text=ingredientDescriptionOne
-            })
+         
             if(row*2+1<=imageArray.count-1){
                 let imageURLTwo = imageArray[row*2+1]
                 if imageURLTwo != "" {
                     let ingredientDescriptionTwo=originalStringArray[row*2+1]
-                    imageDownloadHelper.sharedLoader.imageForUrl(imageURLTwo, completionHandler:{(image: UIImage?, url: String) in
-                        
-                        ingredientCell.imageViewTwo.image=image
-                        ingredientCell.textViewTwo.text=ingredientDescriptionTwo
-                    })
+                    ingredientCell.imageViewTwo.sd_setImageWithURL(NSURL(string:imageURLTwo),placeholderImage:nil)
+                    ingredientCell.textViewTwo.text=ingredientDescriptionTwo
+                 
                 }
             }
             return ingredientCell

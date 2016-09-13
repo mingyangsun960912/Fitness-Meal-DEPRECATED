@@ -67,13 +67,14 @@ class ShoppingListTableViewCell: UITableViewCell {
                 newShoppingItem.note=ratingVC.noteTextView.text
                 newShoppingItem.priceEst=ratingVC.priceEstTextField.text!
                 newShoppingItem.finish=item.finish
+                newShoppingItem.order=item.order
                 RealmHelperClass.updateShoppingListItem(item, newShoppingListItem: newShoppingItem)
-                self.item!.name=ratingVC.nameTextField.text!
-                self.item!.number=ratingVC.quantityTextField.text!
-                self.item!.unit=ratingVC.unitTextField.text!
-                self.item!.note=ratingVC.noteTextView.text
-                self.item!.priceEst=ratingVC.priceEstTextField.text!
-                self.itemLabel.text = self.item!.name
+//                self.item!.name=ratingVC.nameTextField.text!
+//                self.item!.number=ratingVC.quantityTextField.text!
+//                self.item!.unit=ratingVC.unitTextField.text!
+//                self.item!.note=ratingVC.noteTextView.text
+//                self.item!.priceEst=ratingVC.priceEstTextField.text!
+//                self.itemLabel.text = self.item!.name
                 }
                
             }
