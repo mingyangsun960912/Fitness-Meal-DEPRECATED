@@ -94,7 +94,7 @@ class SimilarIndividualRecipeViewController: UIViewController, UITableViewDelega
     var vitaminE:String=""
     var vitaminK:String=""
     let head: [String: String] = [
-        "X-Mashape-Key": "1C9TO0ENkpmsho9kJK5xKzEcSdJAp1XiAgsjsn5TythzmyNqSb",
+        "X-Mashape-Key": AppDelegate.head,
         ]
     var newLikeObject:FavoriteRecipeObject?
     var returnToLast:Bool=false

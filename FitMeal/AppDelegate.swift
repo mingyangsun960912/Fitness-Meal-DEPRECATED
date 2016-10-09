@@ -12,10 +12,18 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    static var head:String=""
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        var keys: NSDictionary?
+        if let path = NSBundle.mainBundle().pathForResource("ApiKeys", ofType: "plist") {
+            keys = NSDictionary(contentsOfFile: path)
+        }
+        if let dict = keys {
+            AppDelegate.head = dict["API_CLIENT_HEAD"] as! String
+        }
+        
         UINavigationBar.appearance().barTintColor = UIColor.whiteColor()
         UINavigationBar.appearance().tintColor = UIColor.blackColor()
         let fontForBar:UIFont=UIFont(name: "Helvetica", size: 13)!

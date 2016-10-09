@@ -33,6 +33,8 @@
 		5B70F2E61D504A1C00264D48 /* ShoppingItemObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B70F2E51D504A1C00264D48 /* ShoppingItemObject.swift */; };
 		5B7E55FE1D5B9FA0003C1BC4 /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7E55FD1D5B9FA0003C1BC4 /* KDCircularProgress.swift */; };
 		5B87B4531D471AFF00A6C616 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B2BFD6F1D344CB50099CC5F /* Main.storyboard */; };
+		5BA55DB31DA9C5E8001D5821 /* ApiKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5BA55DB21DA9C5E8001D5821 /* ApiKeys.plist */; };
+		5BA55DB51DA9CFB8001D5821 /* ApiKeyClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BA55DB41DA9CFB8001D5821 /* ApiKeyClass.swift */; };
 		5BAEC9401D5555C800734DF8 /* RealmHelperClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAEC93F1D5555C800734DF8 /* RealmHelperClass.swift */; };
 		5BB9F4601D492AE40079DD55 /* StepsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB9F45F1D492AE40079DD55 /* StepsTableViewCell.swift */; };
 		5BB9F4621D494E000079DD55 /* StepCellObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB9F4611D494E000079DD55 /* StepCellObject.swift */; };
@@ -82,6 +84,8 @@
 		5B70F2E31D50156300264D48 /* ShoppingListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShoppingListTableViewCell.swift; sourceTree = "<group>"; };
 		5B70F2E51D504A1C00264D48 /* ShoppingItemObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShoppingItemObject.swift; sourceTree = "<group>"; };
 		5B7E55FD1D5B9FA0003C1BC4 /* KDCircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KDCircularProgress.swift; sourceTree = "<group>"; };
+		5BA55DB21DA9C5E8001D5821 /* ApiKeys.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ApiKeys.plist; sourceTree = "<group>"; };
+		5BA55DB41DA9CFB8001D5821 /* ApiKeyClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiKeyClass.swift; sourceTree = "<group>"; };
 		5BAEC93F1D5555C800734DF8 /* RealmHelperClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmHelperClass.swift; sourceTree = "<group>"; };
 		5BB9F45F1D492AE40079DD55 /* StepsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepsTableViewCell.swift; sourceTree = "<group>"; };
 		5BB9F4611D494E000079DD55 /* StepCellObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepCellObject.swift; sourceTree = "<group>"; };
@@ -156,6 +160,7 @@
 		5B2BFD5F1D344CB50099CC5F = {
 			isa = PBXGroup;
 			children = (
+				5BA55DB21DA9C5E8001D5821 /* ApiKeys.plist */,
 				5B2BFD6A1D344CB50099CC5F /* FitMeal */,
 				5B2BFD691D344CB50099CC5F /* Products */,
 				C35B25C8D8AABED979D96C45 /* Pods */,
@@ -186,6 +191,7 @@
 				5B2BFD721D344CB50099CC5F /* Assets.xcassets */,
 				5B2BFD741D344CB50099CC5F /* LaunchScreen.storyboard */,
 				5B2BFD771D344CB50099CC5F /* Info.plist */,
+				5BA55DB41DA9CFB8001D5821 /* ApiKeyClass.swift */,
 			);
 			path = FitMeal;
 			sourceTree = "<group>";
@@ -338,6 +344,7 @@
 				5B0288011D51138000E369E2 /* RatingViewController.xib in Resources */,
 				5B2BFD761D344CB50099CC5F /* LaunchScreen.storyboard in Resources */,
 				5B2BFD731D344CB50099CC5F /* Assets.xcassets in Resources */,
+				5BA55DB31DA9C5E8001D5821 /* ApiKeys.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,6 +424,7 @@
 				5B70F2D21D49800400264D48 /* SimilarRecipeTableViewCell.swift in Sources */,
 				5B70F2E61D504A1C00264D48 /* ShoppingItemObject.swift in Sources */,
 				5BF751F61D3D4F6400998B25 /* RecipeListViewCellTableViewCell.swift in Sources */,
+				5BA55DB51DA9CFB8001D5821 /* ApiKeyClass.swift in Sources */,
 				5BAEC9401D5555C800734DF8 /* RealmHelperClass.swift in Sources */,
 				5B2DE4C11D58628E0057EBA1 /* DislikeIDObject.swift in Sources */,
 				5B70F2D61D4BF20700264D48 /* SimilarIndividualRecipeViewController.swift in Sources */,

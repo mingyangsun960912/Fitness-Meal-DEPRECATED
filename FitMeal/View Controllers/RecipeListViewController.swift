@@ -16,8 +16,9 @@ import SDWebImage
 class RecipeListViewController: UIViewController, UITableViewDelegate{
     @IBOutlet weak var RecipeTableView: UITableView!
     var recipeList:[RecipeCellObject]=[]
+    
     let head: [String: String] = [
-        "X-Mashape-Key": "1C9TO0ENkpmsho9kJK5xKzEcSdJAp1XiAgsjsn5TythzmyNqSb",
+        "X-Mashape-Key": AppDelegate.head,
         ]
     var progressFinish:Bool=false
     var retreveFinish:Bool=false
@@ -67,45 +68,8 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
         noResultsView.hidden=true
         RecipeTableView.hidden=true
        activityIndicator.startAnimating()
-        self.getAllResults()
-//        progressView = KDCircularProgress(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
-//        progressView!.startAngle = -90
-//        progressView!.progressThickness = 0.1
-//        progressView!.trackThickness = 0.3
-//        progressView!.clockwise = true
-//        progressView!.center = view.center
-//        progressView!.roundedCorners = true
-//        progressView!.glowMode = .Constant
-//        progressView!.setColors(UIColor.whiteColor())
-//        progressView!.angle = 300
-//        let screenSize:CGRect=UIScreen.mainScreen().bounds
-//        
-//        var loadingLabel = UILabel(frame: CGRectMake((progressView!.bounds.width - 150) / 2, (progressView!.bounds.height - 25) / 2, 150, 25))
-//        loadingLabel.textAlignment=NSTextAlignment.Center
-//        loadingLabel.text="Loading..."
-//        loadingLabel.font=UIFont(name:"Times New Roman-Bold",size:22)
-    
-//        loadingLabel.center=progressView!.center
-       
-//        progressView!.addSubview(loadingLabel)
-//        view.addSubview(progressView!)
-//        progressView!.animateFromAngle(0, toAngle: 360, duration: 13) { completed in
-//            if completed {
-//                self.progressFinish=true
-//                if(self.retreveFinish==true){
-//                    self.progressView?.hidden=true
-//                    self.RecipeTableView.hidden=false
-//                    self.noResultsView.hidden=true
-//                }else{
-//                    loadingLabel.text="Be patient..."
-//                    self.progressView?.hidden=false
-//                    self.RecipeTableView.hidden=true
-//                    self.noResultsView.hidden=true
-//                }
-//            } else {
-//                self.progressFinish=false
-//            }
-//        }
+ 
+     self.getAllResults()
         
 
     }
@@ -169,7 +133,7 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
           parameters["minCarbs"]=minCarbs
           parameters["minFat"]=minFat
            parameters["minProtein"]=minProtein
-         parameters["number"]=40
+         parameters["number"]=5
          parameters["offset"]=0
         parameters["query"]=query
         parameters["ranking"]=1
@@ -221,15 +185,7 @@ class RecipeListViewController: UIViewController, UITableViewDelegate{
                                     self.retreveFinish=true
                                     self.activityIndicator.stopAnimating()
                                     self.RecipeTableView!.hidden=false
-//                                    if(self.progressFinish==false){
-//                                        self.progressView!.hidden=false
-//                                        self.RecipeTableView.hidden=true
-//                                        self.noResultsView.hidden=true}
-//                                    else{
-//                                        self.progressView?.hidden=true
-//                                        self.RecipeTableView.hidden=false
-//                                        self.noResultsView.hidden=true
-//                                    }
+
                                     
                                 }
                             }
